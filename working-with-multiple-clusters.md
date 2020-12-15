@@ -1,6 +1,6 @@
 As a developer, there's going to be a time where you need to work with different Kubernetes clusters. At a minimum, you need to work with two clusters. One is your local clusters, and a second one could be a remote cluster for testing purposes in a cloud provider or elsewhere. Kubernetes has a set of configurations you can use to interact with different clusters from your workstation using kubectl. At the end of the day, remember that you're interacting with an API to persist the desired state for your workloads.
 
-Even though kubectl offers a set of commands you could use to work with different clusters, you might need another set of tools to make your life easier. And if you're using Okteto, you don't need to use another tool and almost forget about kubectl to work with different clusters. We'll see in this post how's that possible.
+Even though kubectl offers a set of commands you could use to work with different clusters, you might need another set of tools to make your life easier. And if [you're using okteto](https://github.com/okteto/okteto), you don't need to use another tool and almost forget about kubectl to work with different clusters. We'll see in this post how's that possible.
 
 But first, let's briefly talk about contexts in Kubernetes, which is the configuration you use to work with multiple clusters.
 
