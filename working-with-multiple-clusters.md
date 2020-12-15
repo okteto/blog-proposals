@@ -131,7 +131,7 @@ $ curl localhost:3000
 Hello Kubernetes!
 ```
 
-When you close the Okteto terminal, notice that you're still using the remote cluster context. Locally, nothing changed because Okteto allowed knows which context to use to deploy your application where it should be running. At least, you're going to make sure you're developing in a local cluster and not in a production cluster.
+When you close the Okteto terminal, notice that you're still using the remote cluster context. Locally, nothing changed because Okteto automatically knows which context to use to deploy your application where it should be running. With this, you can rest assured that you're developing in a local cluster and not in a production cluster!
 
 ## Configuring Namespaces in Okteto
 
