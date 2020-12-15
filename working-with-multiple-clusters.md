@@ -66,7 +66,7 @@ Active namespace is "service-b".
 $ kubectl get svc
 ```
 
-As you've noticed, kubectx and kubens help you work with different clusters and namespaces, which is a little less problematic.
+As you've noticed, kubectx and kubens help you work with different clusters and namespaces, which is a little less problematic. But still need to type a lot of commands.
 
 But what if there's even a better way for developers? Let's see.
 
