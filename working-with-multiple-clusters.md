@@ -1,16 +1,27 @@
-As a developer, there's going to be a time where you need to work with different Kubernetes clusters. At a minimum, you need to work with two clusters. One is your local clusters, and a second one could be a remote cluster for testing purposes in a cloud provider or elsewhere. Kubernetes has a set of configurations you can use to interact with different clusters from your workstation using kubectl. At the end of the day, remember that you're interacting with an API to persist the desired state for your workloads.
+As a developer, there's going to be a time where you need to work with different Kubernetes clusters. At a minimum, you need to work with two clusters: one is your local cluster, and a second one could be a remote cluster for testing purposes in a cloud provider or elsewhere. Kubernetes has contexts, a set of configurations you can use to interact with different clusters from your workstation using kubectl. At the end of the day, remember that you're interacting with an API to persist the desired state for your workloads.
 
-Even though kubectl offers a set of commands you could use to work with different clusters, you might need another set of tools to make your life easier. And if [you're using okteto](https://github.com/okteto/okteto), you don't need to use another tool and almost forget about kubectl to work with different clusters. We'll see in this post how's that possible.
+Even though kubectl offers a set of commands you could use to work with different clusters, you might need another set of tools to make your life easier. Sometimes, typing long commands would decrease your productivity, and they're hard to remember initially. And if [you're using okteto](https://github.com/okteto/okteto), you don't need to use another tool and almost forget about kubectl to work with different clusters. We'll see in this post how's that possible.
 
 But first, let's briefly talk about contexts in Kubernetes, which is the configuration you use to work with multiple clusters.
 
 ## What's a Kubernetes Context?
 
-A context in Kubernetes a set of parameters you have to communicate with a cluster from your local workstation using kubectl.
+A context in Kubernetes a set of parameters you have to communicate with a cluster from your local workstation using kubectl. For instance, you could have something like this in your `~/.kube/config` file:
+
+```
+contexts:
+- context:
+    cluster: docker-desktop
+    namespace: default
+    user: docker-desktop
+  name: docker-desktop
+```
 
 Each context contains a cluster, namespace, and user information that kubectl uses to make the cluster's API calls. You can find all these configurations in the `~/.kube/config` file. However, configuring this file could be overwhelming if you're starting with Kubernetes, especially if you want to start coding your applications. Most of the time, you don't have to configure the kubeconfig file as most of the Kubernetes installation providers already offer a command to generate that file.
 
-If you're already using Kubernetes, you might give it a look in your `~/.kube/config` file, and you might find out that you already have the configuration necessary to connect to different clusters. In case you want to understand more about Kubernetes contexts, you can [visit the official Kubernetes documentation site](https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/) and learn how to [configure access to multiple clusters using contexts](https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/). In this post, I'll focus on the different ways you have to use contexts to increase your development productivity when working with more than one cluster.
+If you're already using Kubernetes, you might give it a look in your `~/.kube/config` file, and you might find out that you already have the configuration necessary to connect to different clusters. In case you want to understand more about Kubernetes contexts, you can [visit the official Kubernetes documentation site](https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/) and learn how to [configure access to multiple clusters using contexts](https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/). 
+
+In this post, I'll focus on the different ways you have to use contexts to increase your development productivity when working with more than one cluster. Also, I'll be using Docker for Desktop because it comes with a [local Kubernetes cluster that you can enable with only a few clicks](https://www.techrepublic.com/article/how-to-add-kubernetes-support-to-docker-desktop/).
 
 ## Using Kubernetes Contexts
 
