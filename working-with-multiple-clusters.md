@@ -36,7 +36,7 @@ $ kubectx -
 Switched to context "docker-desktop".
 ```
 
-Every subsequence command you run will be making calls to the corresponding Kubernetes cluster.
+Every subsequent command you run will be making calls to the corresponding Kubernetes cluster.
 
 ## Working with Multiple Namespaces
 
