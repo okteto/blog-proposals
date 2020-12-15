@@ -25,7 +25,7 @@ $ kubectl config use-context remote-cluster
 Switched to context "remote-cluster".
 ```
 
-However, the above commands are still a little bit longer. Although you could create aliases in your workstation, I'd highly recommend you to use [kubectx](https://github.com/ahmetb/kubectx), a tool for switching and managing contexts. Besides changing contexts, you can easily go back to the previous contexts, show the current context, rename or delete a context, and more. So the above commands now will be:
+However, the above commands are still long and hard to remember. Although you could create aliases in your workstation, I'd highly recommend you to use [kubectx](https://github.com/ahmetb/kubectx) instead. Kubectx is a command line tool for switching and managing Kubernetes contexts. Besides changing contexts, you can easily go back to the previous contexts, show the current context, rename or delete a context, and more. So the above commands now will be:
 
 ```
 $ kubectx docker-desktop
