@@ -40,7 +40,7 @@ Every subsequent command you run will be making calls to the corresponding Kuber
 
 ## Working with Multiple Namespaces
 
-At this point, you're able to connect and work with multiple Kubernetes clusters from your workstation. But remember that a context is also referring to a namespace in Kubernetes. That namespace will be the default one when you don't specify a namespace in a kubectl command. For instance, your `docker-desktop` context has the `default` namespace configured. Then, every time you run `kubectl get pods`, it will return the list of pods from the `default` namespace.
+At this point, you're able to connect and work with multiple Kubernetes clusters from your workstation. But remember that a context is also referring to a namespace in Kubernetes. That namespace will be `default`  when you don't specify a namespace in a kubectl command. For instance, your `docker-desktop` context has the `default` namespace configured. Then, every time you run `kubectl get pods`, it will return the list of pods from the `default` namespace.
 
 However, there are going to be times where you also need to work with different namespaces. Perhaps you're in charge of two applications, and each application uses a namespace to deploy the Kubernetes objects it needs. Every time you run a kubectl command, you'd have to specify the name of the namespace you want to use, like this:
 
