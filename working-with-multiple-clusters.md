@@ -60,7 +60,7 @@ $ kubectl get pods -n service-a
 $ kubectl get svc -n service-b
 ```
 
-You might don't see a problem with the above commands. However, when you're coding, you might need to change namespaces a little bit quicker and avoid any confusion if you forgot to include the namespace's proper name. If you don't want to specify a namespace in every kubectl command you run, you'd have to modify the `~/.kube/config` file. However, [there's a project called kubens](https://github.com/ahmetb/kubectx) (from the same project creator as kubectx) that you could use to switch between different namespaces quickly.  `kubens` will update the Kubernetes context for you automatically. The above commands now can be like this:
+You might not see a problem with the above commands. However, when you're coding, you might need to change namespaces a little bit quicker and avoid any confusion if you forgot to include the namespace's proper name. If you don't want to specify a namespace in every kubectl command you run, you'd have to modify the `~/.kube/config` file. However, [there's a project called kubens](https://github.com/ahmetb/kubectx) (from the same project creator as kubectx) that you could use to switch between different namespaces quickly.  `kubens` will update the Kubernetes context for you automatically. The above commands now can be like this:
 
 ```
 $ kubens
