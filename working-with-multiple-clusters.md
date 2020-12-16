@@ -83,7 +83,7 @@ But what if there's even a better way for developers? Let's see.
 
 ## Developing with Contexts in Okteto
 
-Okteto has support for configuring the context and namespace your applications might need. Hence, you have consistency at coding time because all developers are going to use the same configurations. Also, you'll have fewer commands to run, so you can focus on writing your application, not  on managing clusters. Even if the existing commands from kubectcl or the kubectx utility, you still need to switch manually. Conversely, with Otketo, you can include this configuration in the YAML manifest and forget about it.
+Okteto has support for configuring the context and namespace your applications might need. Hence, you have consistency at coding time because all developers are going to use the same configurations. Also, you'll have fewer commands to run, so you can focus on writing your application, not on managing clusters. Even if the existing commands from kubectcl or the kubectx utility, you still need to switch manually. Conversely, with Okteto, you can include this configuration in the YAML manifest and forget about it.
 
 For instance, following [our sample from Rust](https://okteto.com/blog/getting-started-with-okteto-and-rust/), you could modify the `okteto.yaml` to this:
 
