@@ -485,4 +485,10 @@ You can exit the development console by running the Ctrl + D command twice.
 
 ## Conclusion
 
-In this article, you built a CRUD recipe application and deployed it to Okteto. The code used in this article can be found in [GitHub](https://github.com/okteto/fastapi-crud).
+In this article, you built a CRUD recipe application and deployed it to Okteto. 
+
+You witnessed the simplicity and ease of deployment of application using Okteto and how fast and simple it is to build FastAPI applications. 
+
+The application can also be deployed directly to Okteto from a GitHub repository by following this [Step By Step Guide](https://okteto.com/docs/cloud/deploy-from-git/index.html).
+
+The code used in this article can be found in [GitHub](https://github.com/okteto/fastapi-crud).
