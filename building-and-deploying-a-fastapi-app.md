@@ -11,7 +11,7 @@ FastAPI is a modern Python web framework designed for building fast and efficien
 
 ## What is Okteto?
 
-Okteto is a tool used to develop and accelerate the development workflow of the Kubernetes application.
+Okteto is a tool used to develop and accelerate the development workflow of Kubernetes applications.
 
 ## Initial Setup
 
@@ -29,6 +29,8 @@ $ python3.9 -m venv venv
 $ source venv/bin/activate
 $ export PYTHONPATH=$PWD
 ```
+
+Virtual environment provides an isolated environment to run our Python applications. FastAPI applications require an isolated environment to manage it's dependencies such as Uvicorn which is an Asynchronous GateWay Server Interface server.
 
 Next, create the following files and folder:
 
@@ -48,7 +50,7 @@ fastapi==0.62.0
 uvicorn==0.13.1
 ```
 
-The first dependency, `fastapi,` is the framework on which your application will be built. The second dependency, `uvicorn`, is an Asynchronous Gateway Server Interface (ASGI) that enables us to run our FastAPI application.
+The first dependency, `fastapi,` is the framework on which your application will be built. The second dependency, [`uivorn`](http://uvicorn.org), is an Asynchronous Gateway Server Interface (ASGI) that enables us to run our FastAPI application.
 
 Install the dependencies:
 
@@ -84,7 +86,9 @@ if __name__ == "__main__":
     uvicorn.run("app.api:app", host="0.0.0.0", port=8080, reload=True)
 ```
 
-In the code block above, you imported the uvicorn package itself. Under the initializer block, you invoked the `fun` method, which takes the location of FastAPI's instance, the host, port, and the reload boolean value.
+In the code block above, you imported the uvicorn package itself. Under the initializer block, you invoked the `run` method, which takes the location of FastAPI's instance, the host, port, and the reload boolean value.
+
+In this application, the location of the FastAPI instance, `app = FastAPI()` is in the file `app/api.py`. The host value can be set to a valud IP address within your local macbine's configured IP scope, it can also be left blank. Likewise the port and reload value. The port `8080` is chosen since Okteto applications run on port 8080 by default, the reload value is set to True to avoid restarting the application on every change made.
 
 Next, start the application:
 
@@ -114,7 +118,7 @@ Navigate to http://localhost:8080 in your browser. You should see:
 
 ## Routes
 
-You'll be building a recipe application.
+You'll be building a recipe application where you can store, remove, update and delete recipes by sending HTTP requests.
 
 Before you begin writing the routes, define the model schema for the application:
 
@@ -232,6 +236,7 @@ def add_recipe(recipe: RecipeSchema = Body(...)) -> dict:
 ```
 
 In the code block above, we made sure the request body is modeled in our `RecipeSchema` by setting the type `recipe` to `RecipeSchema` in the `add_recipe` function. The `Body(...)` imported from FastAPI ensures that the request body is passed.
+In an event where the content of the request doesn't match the specified schema type, an error message automatically generated from Pydantic will be generated and then returned.
 
 In the `add_recipe` function, the recipe ID is computed by incrementing the length of the recipes database by 1. Test the POST route using curl:
 
@@ -367,7 +372,11 @@ You have successfully built the CRUD application.
 
 ## Deploying to Okteto
 
-In this section, you will be deploying the application to Okteto. 
+In this section, you will be deploying the application to Okteto.
+
+### Why Deployment?
+
+Deploying your application enable you and other people access it through it's unique URL address. Your application is inaccessible by other people since it runs only on your machine's localhost. Also, deploying it on a cloud server like Okteto enables your application to run on the HTTPs service.
 
 Create an account on [Okteto](https://cloud.okteto.com) if you do not have one setup. Additionally, [Install the Okteto CLI](https://okteto.com/docs/getting-started#step-2-install-the-okteto-cli) on your machine.
 
@@ -393,21 +402,13 @@ With the necessary installations in place, log on to Okteto from your terminal u
 $ okteto login
 ```
 
-After logging in, run `okteto init` to create an Okteto manifest file. The command automatically generates an `okteto.yml` file. Overwrite the content to:
-
-```yaml
-name: fastapi-okteto
-command: bash
-workdir: /app
-```
-
 The next step is to create a stack manifest file for Okteto. The manifest file removes the need to deal with the complexities of Kubernetes manifests.
 
 ```
 $ touch okteto-stack.yaml
 ```
 
-In the `okteto-stack.yaml` file, define the application using a docker-compose format:
+In the `okteto-stack.yaml` file, define the application using a format that's very similar to docker-compose:
 
 ```yaml
 name: fastapi-crud
@@ -424,7 +425,7 @@ services:
       memory: 128Mi
 ```
 
-In the manifest file above, you defined your application's name and the services your app is made up of, fastapi. The fastapi service exposes the port `8080` and allocates itself with 100 mili CPUs and 128Mi of memory. 
+In the manifest file above, you defined your application's name and the services your app is made up of, fastapi. The fastapi service exposes your application via the port `8080` to a public HTTPs endpoint with a valid certificate. The service also allocates itself with 100 mili CPUs and 128Mi of memory. 
 
 > Okteto has a reference page on [https://okteto.com/docs/reference/stacks](Okteto Stacks Manifest).
 
@@ -443,8 +444,6 @@ ADD requirements.txt /requirements.txt
 
 ADD main.py /main.py
 
-ADD okteto-pipeline.yaml /okteto-pipeline.yaml
-
 ADD okteto-stack.yaml /okteto-stack.yaml
 
 ADD okteto.yml /okteto.yml
@@ -458,17 +457,6 @@ COPY ./app app
 CMD ["python3", "main.py"]
 ```
 
-Next, create an `okteto-pipeline.yaml` file. The Okteto pipeline file gives you more control over how you want to deploy and build your application. Add the following in the pipeline file:
-
-```yaml
-deploy:
-  - okteto stack deploy --build
-dev:
-  - okteto.yml
-```
-
-In the pipeline file above, you defined the instruction for deployment and development. When Okteto deploys your application, it references the instruction listed in the stack manifest, and when it's developing the application, it references the Okteto manifest for instructions.
-
 Before proceeding to deployment on Okteto, download and set up your Kubernetes credentials on your local machine:
 
 ![Okteto Dashboard](https://res.cloudinary.com/adeshina/image/upload/v1608635743/x9tmv4styid2hffxilxx.png)
@@ -479,54 +467,13 @@ Let's deploy your application to Okteto. Start by running the command:
 okteto namespace
 ```
 
-The command above setups a namespace on the Okteto cloud. Next, run the command:
+The command above setups a namespace on the Okteto cloud. Next, run the command to deploy the application:
 
 ```
-okteto up
+okteto stack deploy --build
 ```
 
-The command above setups a new deployment. You should have a similar response in your console:
-
-```
-Deployment fastapi-crud doesn't exist in namespace youngestdev. Do you want to create a new one? [y/n]: y
- ✓  Development container activated
- ✓  Connected to your development container
- ✓  Files synchronized
-    Namespace: youngestdev
-    Name:      fastapi-crud
-
-Welcome to your development container. Happy coding!
-
-```
-
-Log on to your Okteto dashboard; you should see the newly deployed application alongside a volume created similar to this:
-
-![Deployed Application](https://res.cloudinary.com/adeshina/image/upload/v1608636581/jq7fjtldhz1tqqzuh29h.png)
-
-In your console, you are automatically logged into your cloud server. So, return to the terminal and create a virtual environment:
-
-```sh
-youngestdev:fastapi-crud app> python3 -m venv venv
-```
-
-If the above command throws an error, install the venv module:
-
-```sh
-youngestdev:fastapi-crud app> apt-get install python3-venv -y
-```
-
-Rerun the first command afterward. Activate the virtual environment and install the dependencies:
-
-```sh
-youngestdev:fastapi-crud app> source venv/bin/activate
-(venv) youngestdev:fastapi-crud app> pip install -r requirements.txt
-```
-
-Next, start the application:
-
-```
-(venv) youngestdev:fastapi-crud app> python3 main.py
-```
+The command above builds the service you indicated in the `okteto-stack.yml` file and then deploys the application. This command eases the stress of having to build, then manually configuring the application after deployment.
 
 The command above starts the application. Navigate to your dashboard and click the link under the "Endpoints" heading:
 
