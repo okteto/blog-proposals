@@ -459,6 +459,14 @@ COPY ./app app
 CMD ["python3", "main.py"]
 ```
 
+With the Dockerfile in place, log into your Docker Hub account on your console:
+
+```
+docker login
+```
+
+If you do not have a docker hub account, visit the [Docker Hub Website](https://hub.docker.com) to create one. A docker hub account is necessary to store images built from running the deploy command.
+
 Let's deploy your application to Okteto. Start by running the command: 
 
 ```
