@@ -158,7 +158,9 @@ class UpdateRecipeSchema(BaseModel):
 
 ```
 
-In the block of code above, you defined how the recipe would be represented, sent, and retrieved in your in-app database. Each recipe will have an ID automatically generated once a POST request is sent. Each recipe will also comprise of a name and an array of ingredients. If any other type of data not listed in the schema is sent in the request body, an error will be returned.
+In the block of code above, you defined how the recipe would be represented, sent, and retrieved in your in-app database. In a realistic scenario, you should use a seperate database like MySQL, Postgres or MongoDB.
+
+Each recipe will have an ID automatically generated once a POST request is sent. Each recipe will also comprise of a name and an array of ingredients. If any other type of data not listed in the schema is sent in the request body, an error will be returned.
 
 The `RecipeSchema` has a subclass `Config`. The subclass contains an object variable, `schema_extra`, which includes a key `example` used as the mock data in the interactive documentation.
 
@@ -457,10 +459,6 @@ COPY ./app app
 CMD ["python3", "main.py"]
 ```
 
-Before proceeding to deployment on Okteto, download and set up your Kubernetes credentials on your local machine:
-
-![Okteto Dashboard](https://res.cloudinary.com/adeshina/image/upload/v1608635743/x9tmv4styid2hffxilxx.png)
-
 Let's deploy your application to Okteto. Start by running the command: 
 
 ```
@@ -480,8 +478,6 @@ The command above starts the application. Navigate to your dashboard and click t
 ![Dashboard](https://res.cloudinary.com/adeshina/image/upload/v1608638743/q8xcjhl2gdnh0tdzr573.png).
 
 Go on and test the endpoints.
-
-You can exit the development console by running the Ctrl + D command twice.
 
 ## Conclusion
 
