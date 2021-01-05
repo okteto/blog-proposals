@@ -398,6 +398,15 @@ venv
 __pycache__
 ```
 
+Next, log into your docker hub account from the console:
+
+```
+docker login
+```
+
+If you do not have a docker hub account, visit the [Docker Hub Website](https://hub.docker.com) to create one. A docker hub account is necessary to store images built from running the deploy command.
+
+
 With the necessary installations in place, log on to Okteto from your terminal using the command:
 
 ```sh
@@ -417,7 +426,7 @@ name: fastapi-crud
 services:
   fastapi:
     public: true
-    image: fastapi-crud:latest
+    image: DOCKERHUBUSERNAME/fastapi-crud:latest
     build: .
     replicas: 1
     ports:
@@ -427,7 +436,7 @@ services:
       memory: 128Mi
 ```
 
-In the manifest file above, you defined your application's name and the services your app is made up of, fastapi. The fastapi service exposes your application via the port `8080` to a public HTTPs endpoint with a valid certificate. The service also allocates itself with 100 mili CPUs and 128Mi of memory. 
+In the manifest file above, you defined your application's name and the services your app is made up of, fastapi. The fastapi service exposes your application via the port `8080` to a public HTTPs endpoint with a valid certificate. The service also allocates itself with 100 mili CPUs and 128Mi of memory. Replace **DOCKERHUBUSERNAME** in the file above with your docker hub username.
 
 > Okteto has a reference page on [https://okteto.com/docs/reference/stacks](Okteto Stacks Manifest).
 
@@ -458,14 +467,6 @@ COPY ./app app
 
 CMD ["python3", "main.py"]
 ```
-
-With the Dockerfile in place, log into your Docker Hub account on your console:
-
-```
-docker login
-```
-
-If you do not have a docker hub account, visit the [Docker Hub Website](https://hub.docker.com) to create one. A docker hub account is necessary to store images built from running the deploy command.
 
 Let's deploy your application to Okteto. Start by running the command: 
 
