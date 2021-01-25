@@ -169,6 +169,7 @@ You can go on to test the new route added.
 
 ## Conclusion
 
-In this article, you deployed an application directly from the Okteto dashboard and redeployed another version of the new branch application. The deployment was done with minor changes to the Okteto stack file, demonstrating the Okteto stacks' universality.
+In this article, you deployed an application directly from the Okteto dashboard and redeployed another new branch application version. The deployment was done with minor changes to the Okteto stack file, demonstrating the universality of the Okteto stacks. 
 
-Additionally, Okteto can perform the deployment from different branches from the CLI tool. You can find the code from this article on [GitHub](https://github.com/Okteto/fastapi-crud/tree/bulk-recipes)
+Additionally, Okteto can perform the deployment from different branches from the CLI tool. You can find the code from this article on [GitHub]
+(https://github.com/Okteto/fastapi-crud/tree/bulk-recipes)
