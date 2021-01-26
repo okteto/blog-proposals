@@ -1,6 +1,8 @@
 # Deploying An Existing Application Using Okteto UI
 
-In the previous blog post, you learned how to build a FastAPI CRUD application and deployed it to Okteto using the Okteto CLI tool. In this tutorial, you will be learning how to deploy the application directly from your Okteto dashboard.
+Fast deployment of applications is an attribute Okteto boasts of. The deployment of applications from the Okteto dashboard is easy and fast as it requires one click on the deploy button without having to deal with the complexities of CLIs, manifests, etc. Applications deployed from the CLI are automatically secured using HTTPs and can be tested, shared and used by the public.
+
+In the [previous blog post](https://okteto.com/blog/building-and-deploying-a-fastapi-app-in-okteto-cloud/), you learned how to build a FastAPI CRUD application and deployed it to Okteto using the Okteto CLI tool. In this tutorial, you will be learning how to deploy the application directly from your Okteto dashboard.
 
 ## Initial Setup
 
@@ -20,7 +22,7 @@ python3 main.py
 
 ## Initial Deployment
 
-In the previous post, you defined an Okteto stack file to facilitate the deployment of your application from the CLI tool. In this section, you will be deploying the application from the dashboard.
+In the [previous post](https://okteto.com/blog/building-and-deploying-a-fastapi-app-in-okteto-cloud/index.html#Deploying-to-Okteto-Cloud), you defined an Okteto stack file to facilitate the deployment of your application from the CLI tool. In this section, you will be deploying the application from the dashboard.
 
 However, before deployment, you need to reassign the repository where Okteto will store your application images.
 
@@ -164,12 +166,47 @@ The branch on which the redeployment can be seen:
 
 ![bulk-recipes branch](https://res.cloudinary.com/adeshina/image/upload/v1611604587/isccfvfifunqfmnevtp8.jpg)
 
-You can go on to test the new route by replacing `localhost` from previous requests to the live application url.
+You can go on to test the new route by replacing `deployedapp` from previous requests to the live application url. From your terminal, run the command:
+
+```bash
+(venv)$ curl --request POST \
+  --url https://deployedapp.cloud.okteto.net/recipes \
+  --header 'Content-Type: application/json' \
+  --data '[
+	{
+		"name": "Donuts",
+		"ingredients": [
+			"Flour",
+			"Milk",
+			"Sugar",
+			"Vegetable Oil"
+		]
+	},
+	{
+		"name": "Creamy Donuts",
+		"ingredients": [
+			"Flour",
+			"Milk",
+			"Sugar",
+			"Vegetable Oil",
+			"Irish whipped cream"
+		]
+	}
+]'
+```
+
+You will get a response:
+
+```json
+{
+  "message": "Recipes added successfully."
+}
+```
 
 
 ## Conclusion
 
-In this article, you deployed an application directly from the Okteto dashboard and redeployed another new branch application version. The deployment was done with minor changes to the Okteto stack file, demonstrating the adaptability of the Okteto stacks. 
-
-Additionally, Okteto can perform the deployment from different branches from the CLI tool. You can find the code from this article on [GitHub]
+In this article, you deployed an application directly from the Okteto dashboard and redeployed another new branch application version. The deployment was done with minor changes to the Okteto stack file, demonstrating the adaptability of the Okteto stacks. Additionally, Okteto can perform the deployment from different branches from the CLI tool. You can find the code from this article on [GitHub]
 (https://github.com/Okteto/fastapi-crud/tree/bulk-recipes)
+
+Get started with [Okteto](https://okteto.com) for free today to begin deploying your application in one click.
