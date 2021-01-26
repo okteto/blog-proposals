@@ -70,13 +70,13 @@ Next, save the changes and commit the changes to GitHub:
 
 With the stack file updated, proceed to your Okteto dashboard to deploy the application:
 
-![Okteto Dashboar](https://res.cloudinary.com/adeshina/image/upload/v1611604440/o5fyl3fhoywmc6auigli.png)
+![Okteto Dashboard](https://res.cloudinary.com/adeshina/image/upload/v1611604440/o5fyl3fhoywmc6auigli.png)
 
 Click on the **Deploy** button. A popup will appear, fill in the **Repository URL** and optionally the branch name which in this case is *main*.
 
 ![Deploy Button](https://res.cloudinary.com/adeshina/image/upload/v1611604456/wdi3swnvoa2v2bhaaqpd.png)
 
-Next, click on the deploy button. Okteto automatically retrieves, deploy and start your application in a few seconds:
+Next, click on the deploy button. Okteto automatically retrieves, deploys and starts your application.
 
 ![Deployed Application](https://res.cloudinary.com/adeshina/image/upload/v1611604494/rscsvqxobd5dc5bt0baa.png)
 
