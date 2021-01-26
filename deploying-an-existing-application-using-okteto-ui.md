@@ -164,7 +164,7 @@ The branch on which the redeployment can be seen:
 
 ![bulk-recipes branch](https://res.cloudinary.com/adeshina/image/upload/v1611604587/isccfvfifunqfmnevtp8.jpg)
 
-You can go on to test the new route added.
+You can go on to test the new route by replacing `localhost` from previous requests to the live application url.
 
 
 ## Conclusion
