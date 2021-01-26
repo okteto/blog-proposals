@@ -58,7 +58,7 @@ In the code block above, you renamed the storage location of your application's 
 
 ### What's the okteto.dev repository ?
 
-The `okteto.dev` repository is the central repository for images of applications deployed from Okteto's UI. The need for the reassignment of the image repository in the stack file is because Okteto lacks the permission to push images into your docker repository from the dashboard as opposed to when deployed from the CLI, where you are required to have an active docker session on your machine.
+The `okteto.dev` repository is a container registry hosted in Okteto Cloud that allows every user to have its own space to store its container images. It's fully integrated with the rest of Okteto. In the previous post, we were using Docker Hub. Here, we are switching to Okteto's so our application deploys faster, and with fewer external dependencies.
 
 Next, save the changes and commit the changes to GitHub:
 
