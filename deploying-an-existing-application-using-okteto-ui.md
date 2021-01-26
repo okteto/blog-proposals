@@ -56,7 +56,7 @@ image: okteto.dev/fastapi-crud:latest
 
 In the code block above, you renamed the storage location of your application's image from your dockerhub to Okteto's repository.
 
-### What's the Okteto.dev repository ?
+### What's the okteto.dev repository ?
 
 The `okteto.dev` repository is the central repository for images of applications deployed from Okteto's UI. The need for the reassignment of the image repository in the stack file is because Okteto lacks the permission to push images into your docker repository from the dashboard as opposed to when deployed from the CLI, where you are required to have an active docker session on your machine.
 
