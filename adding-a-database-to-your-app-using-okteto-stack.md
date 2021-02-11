@@ -22,7 +22,7 @@ Verify that the setup is complete by running:
 python3 main.py
 ```
 
-After verifying the installation, update the `DOCKERHUBUSERNAME` variable in your stack file to your namespace name. Deploy the application with the command:
+After verifying the installation, update the `DOCKERHUBUSERNAME` variable in your stack file to `okteto.dev`. Deploy the application with the command:
 
 
 ```bash
@@ -32,7 +32,7 @@ After verifying the installation, update the `DOCKERHUBUSERNAME` variable in you
 ## Adding A Database
 Before proceeding, verify that you have MongoDB installed or proceed to the [MongoDB's Installation page](https://docs.mongodb.com/manual/installation/) to install MongoDB.
 
-To avoid data loss, you're going to rewrite the application logic to use a MongoDB database, which will be mounted as a container in your Okteto namespace.
+To avoid data loss, you're going to rewrite the application logic to use a MongoDB database, which will be mounted as a container in your Okteto namespace but we'll be running the application locally first to verify that the code works perfectly.
 
 Start by installing `pymongo`, a MongoDB driver for Python application, `python-decouple` for reading environment secrets and update the `requirements.txt` file:
 
@@ -208,7 +208,21 @@ def delete_recipe(id: str) -> dict:
     }
 ```
 
-Update the `api/model.py` by removing the `id` field in the `RecipeSchema` model class.
+Update the `api/model.py` by removing the `id` field in the `RecipeSchema` model class:
+
+```python
+class RecipeSchema(BaseModel):
+    name: str = Field(...)
+    ingredients: List[str] = Field(...)
+
+    class Config:
+        schema_extra = {
+            "example": {
+                "name": "Donuts",
+                "ingredients": ["Flour", "Milk", "Sugar", "Vegetable Oil"]
+            }
+        }
+```
 
 ## Testing The Database
 
@@ -327,7 +341,7 @@ Okteto eases the stress of deployment and subsequent redeployment by allowing us
       - /bitnami/mongodb
 ```
 
-In the code above, you added another service, `mongodb`, to house a MongoDB container from bitnami; the default port **27017** is exposed under the ports heading.
+In the code above, you added another service, `mongodb`, to house a MongoDB container from bitnami; the default port **27017** is exposed under the ports heading. You are using a dedicated MongoDB instance that allows interactions from only your API application and a persistent storage `/bitnami/mongodb` has been setup under your volumes to ensure that data can be retrieved when the application restarts.
 
 Under the `fastapi` service, add an environment heading containing the `DB_HOST` the database file reads using the `decouple` library:
 
