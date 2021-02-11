@@ -312,7 +312,7 @@ Response:
 
 ## Redeploying to Okteto
 
-Okteto eases the stress of deployment and subsequent redeployment by allowing us update and upgrade existing applications from the stack file. Include another service for mongodb in your stack file:
+Okteto eases the stress of deployment and subsequent redeployment by allowing us update and upgrade existing applications from the stack file. In the previous post, we created a okteto stack manifest to deploy our fastAPI service.  We are now going to update it also include a mongodb service:
 
 ```yaml
   mongodb:
