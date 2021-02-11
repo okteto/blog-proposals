@@ -343,7 +343,7 @@ With the stack file updated, deploy it using the command:
 (venv)$ okteto stack deploy --build
 ```
 
-Log on to your [Okteto Dashboard](https://cloud.okteto.com), a MongoDB container alongside your application is mounted:
+Log on to your [Okteto Dashboard](https://cloud.okteto.com), and notice that your application now also has  a MongoDB container alongside your application:
 
 ![Dashboard](https://res.cloudinary.com/adeshina/image/upload/v1612703043/rlkchjwvcomtq3zuhfl9.png)
 
