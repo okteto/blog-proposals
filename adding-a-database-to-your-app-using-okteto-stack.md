@@ -347,7 +347,7 @@ Log on to your [Okteto Dashboard](https://cloud.okteto.com), and notice that you
 
 ![Dashboard](https://res.cloudinary.com/adeshina/image/upload/v1612703043/rlkchjwvcomtq3zuhfl9.png)
 
-Test the newly deployed route by replacing `deployedapp` from previous requests with the live application URL. From your terminal, run the command:
+Test the `recipe` route by replacing `deployedapp` from previous requests with the live application URL. From your terminal, run the command:
 
 ```bash
 (venv)$ curl -X POST "https://fastapi-youngestdev.cloud.okteto.net/recipe" -H  "accept: application/json" -H  "Content-Type: application/json" -d "{\"name\":\"Donuts\",\"ingredients\":[\"Flour\",\"Milk\",\"Sugar\",\"Vegetable Oil\"]}"
