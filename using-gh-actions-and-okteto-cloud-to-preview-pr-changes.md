@@ -1,10 +1,6 @@
-Preview environments serve an important role when performing code reviews for an incoming change or addition to an application's codebase.
+Preview environments serve an important role when performing code reviews for an incoming change or addition to an application's codebase. It is a great way for technical and non-technical members of your team to assess and give feedback on the changes made to your application.
 
-In the [last couple of posts](https://okteto.com/blog/tags/fastapi), you have learned how to build a FastAPI application, deploy the application to Okteto and add a database using Okteto stacks. This article will be explaining how to configure preview environments for incoming changes from pull requests using GitHub Actions and Okteto.
-
-## Okteto Premium
-
-The free tier plan does not allow the creation of multiple namespaces. It is adviced that you upgrade your plan from your [dashboard](https://cloud.okteto.com/#/settings/plans) or try out the 14-day free trial to explore the limitless operations you can perform with Okteto.
+In the last couple of posts; [Building a FastAPI Application and Deploying it with Okteto Stacks](https://okteto.com/blog/building-and-deploying-a-fastapi-app-in-okteto-cloud/), [Deploying An Existing Application Using Okteto Cloud](https://okteto.com/blog/deploying-an-existing-application-with-okteto-cloud/) and [Adding A Database to Your Application Using Okteto Stacks](https://okteto.com/blog/adding-a-database-to-your-app-using-okteto-stack/), you have learned how to build a FastAPI application, deploy the application to Okteto and add a database using Okteto stacks. This article will be explaining how to configure preview environments for incoming changes from pull requests using GitHub Actions and Okteto.
 
 ## What Are Github Actions
 
@@ -67,11 +63,11 @@ jobs:
         msg: "Preview environment available at https://fastapi-pr-${{ github.event.number }}-namespace.cloud.okteto.net"  
 ```
 
-In the code block above, we defined the job `preview` which runs on the `ubuntu-latest` environment. The subtasks to be executed under this job is defined under the `steps` heading. Let's go over these subtasks.
+In the code block above, we defined the job `preview` which runs on the `ubuntu-latest` environment. The steps to be executed under this job is defined under the `steps` heading. Let's go over these steps.
 
 Replace `namespace` in the code block above with your Okteto default namespace.
 
-### Subtasks
+### Steps
 
 In our `preview` job, we have five tasks to be executed. The first task checks out the repository using the `actions/checkout@master` actions, so that the repository is accessible by the entire workflow. 
 
@@ -116,7 +112,7 @@ To monitor the progress of the workflow in action, navigate to the **Actions** t
 
 ![Actions Tab](https://res.cloudinary.com/laisi/image/upload/v1615049702/ezywz076l9q0ml535doc.png)
 
-Click on the workflow currently under execution. In the workflow page, click on the `preview` job to view the execution of the subtasks:
+Click on the workflow currently under execution. In the workflow page, click on the `preview` job to view the execution of the steps:
 
 ![Preview Job](https://res.cloudinary.com/laisi/image/upload/v1615049878/vrdlqon5qg5y1xfs3bqy.png)
 
