@@ -69,13 +69,16 @@ Replace `namespace` in the code block above with your Okteto default namespace.
 
 ### Steps
 
-In our `preview` job, we have five tasks to be executed. The first task checks out the repository using the `actions/checkout@master` actions, so that the repository is accessible by the entire workflow. 
+In our `preview` job, we have five tasks to be executed. 
 
-The second task logs in into your Okteto account as a prerequisite to creating a new namespace where the preview environment will be deployed. This task makes use of` secrets.OKTETO_TOKEN`,  which holds the value of your Okteto token. You'll learn how to create the secret in the next section.
+1. `checkout`: This step checks out the repository using the `actions/checkout@master` actions, so that the repository is accessible by the entire workflow. 
 
-The third task creates a new namespace using the `okteto/create-namespace@master` action and the fourth task, uses the action `okteto/deploy-stack@master` to deploy the application using the okteto stack file. Once again, we have witnessed the adaptability of Okteto stacks.
+2. `Login`: The step logs in into your Okteto account as a prerequisite to creating a new namespace where the preview environment will be deployed. This task makes use of` secrets.OKTETO_TOKEN`,  which holds the value of your Okteto token. You'll learn how to create the secret in the next section.
 
-The last task adds a comment on the pull request discussion indicating a link to the deployed application. It makes use of the `unsplash/comment-on-pr@master` action.
+3. `Create Namespace`: This step creates a new namespace using the `okteto/create-namespace@master` action.
+4. `Deploy Application`: This step uses the action `okteto/deploy-stack@master` to deploy the application using the okteto stack file. Once again, we have witnessed the adaptability of Okteto stacks.
+
+5. `add comment to PR`: This step adds a comment on the pull request discussion indicating a link to the deployed application. It makes use of the `unsplash/comment-on-pr@master` action.
 
 ### Adding Your Okteto Token To GitHub
 
@@ -112,7 +115,7 @@ To monitor the progress of the workflow in action, navigate to the **Actions** t
 
 ![Actions Tab](https://res.cloudinary.com/laisi/image/upload/v1615049702/ezywz076l9q0ml535doc.png)
 
-Click on the workflow currently under execution. In the workflow page, click on the `preview` job to view the execution of the steps:
+Click on the workflow currently under execution. In the workflow page, click on the `preview` job to view the execution and logs of each step:
 
 ![Preview Job](https://res.cloudinary.com/laisi/image/upload/v1615049878/vrdlqon5qg5y1xfs3bqy.png)
 
