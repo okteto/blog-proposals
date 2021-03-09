@@ -71,7 +71,7 @@ Replace `namespace` in the code block above with your Okteto default namespace.
 
 In our `preview` job, we have five tasks to be executed. The first task checks out the repository using the `actions/checkout@master` actions, so that the repository is accessible by the entire workflow. 
 
-The second task logs in into your Okteto account as a prerequisite to creating a new namespace where the preview environment will be deployed. This task makes use of a token `secrets.OKTETO_TOKEN` which is your Okteto token. In the next section, you'll learn how to add your okteto token to your repository.
+The second task logs in into your Okteto account as a prerequisite to creating a new namespace where the preview environment will be deployed. This task makes use of` secrets.OKTETO_TOKEN`,  which holds the value of your Okteto token. You'll learn how to create the secret in the next section.
 
 The third task creates a new namespace using the `okteto/create-namespace@master` action and the fourth task, uses the action `okteto/deploy-stack@master` to deploy the application using the okteto stack file. Once again, we have witnessed the adaptability of Okteto stacks.
 
