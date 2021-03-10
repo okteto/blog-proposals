@@ -100,6 +100,7 @@ The workflow file needs your [Okteto account](https://cloud.okteto.com) token to
 
 ![Create New Secret](https://res.cloudinary.com/laisi/image/upload/v1615047981/pqfyim20zfw8gzoycwma.png)
 
+You can learn more on how to store and manage GitHub secrets on their official [documentation](https://docs.github.com/en/actions/reference/encrypted-secrets).
 
 ## Building The Preview Environment
 
