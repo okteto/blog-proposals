@@ -2,23 +2,26 @@
 
 ## Introduction
 
-In this tutorial, We will building and deploying a Django Role based Authorization Service API(RBAS) on Okteto.
+In this tutorial, We will building and deploying a Django Role based Authorization Service(RBAS) API on Okteto.
 
 An RBAS application, is a system with checks to give access to users based on their roles in the system. 
 
+An RBAS system helps manage users and prevent certain information been exposed to everyone. It also ensures actions users can perfom can be grouped together based on roles.
+
 What is Okteto ?
 
-Okteto is a cloud platform that enables developers develop and deploy cloud like Docker and Kubernetes applications. 
+Okteto is a free developer platform powered by Kubernetes that enables anyone to develop and deploy cloud-native applications.
 
 What is Django?
 
-Django is one of the web framework of python for building APIs. Django is a framework that comes with out of the box functionality used in developing web apps and API, making your development faster and easier.
+[Django](https://www.djangoproject.com/) is a high-level Python Web framework very well suited for building APIs. Django comes with a lot of out of the box functionality, making your development faster and easier.
 
 
 ## Prerequisites 
 - Knowledge of building APIs
 - Basic Knowledge of Django
 - Basic Knowledge of Cloud Infrastructure 
+- Python 3.7+ installed 
 
 ## Scaffold Project
 
@@ -33,12 +36,10 @@ Next, we install Django:
 
     $ pip install django
 
-Running `django-admin`. 
+With Django installed, go ahead and run the  `django-admin` command.  This command is provided by Django to help bootstrap your project, creating essential directories and files to get started.
 
 
     $ django-admin startproject simple_rbas
-
-`django-admin` is a command provided by Django to help bootstrap your project, creating essential directories and files to get started.
 
 Navigate into the new project created;
 
@@ -58,6 +59,11 @@ Install the packages using the `pip` command:
 
 
     pip install -r requirements.txt 
+
+`django-environ` is used connecting to `.env` files. `psycopg2-binary` is used connecting django to a postgres database, and `gunicorn` is used in running our server for production.
+
+We've created a fully functionally django app, you can test with `python manage.py runserver`. Also added requirements file for our venv and our Dockerfile.
+
 ## Development
 
 In this section, we will be building up our model, serializers, permissions for our views, and routing to our views.
@@ -85,9 +91,9 @@ To get started with building our app, we’ll create an app inside our project. 
       -- tests.py
       -- views.py
 
-For our authentication, we will be using using `http-only cookies` and not `localStorage`, to set our authentication.  This is to advised to reduce the risk of security issues.
+For our authentication, we will be using using `http-only cookies` and not `localStorage`, to set our authentication.  It is recommended to use ` http-only-cookies` to reduce the risk of security issues.
 
-We will be creating an authentication middleware and  for the project;
+We will be creating an authentication middleware  for the project. Django provides us with middleware for authenicating users, but because we will be using cooking we will overriding and creating our own middleware;
 
 
     from datetime import datetime, timedelta
@@ -224,7 +230,7 @@ Replace `fake-secret-key` with the `SECRET_KEY` value in settings.py.
 
 > Our `env` keys will only be used for local development.
 
-Your secret key should be the `SECRET_KEY` string in the `settings.py` and change the `SECRET_KEY` and `DEBUG` variable in `settings.py`;
+Change the `SECRET_KEY` and `DEBUG` variable in `settings.py`;
 
 
     # SECURITY WARNING: keep the secret key used in production secret!
@@ -272,8 +278,28 @@ Finally, add the following lines at the end of the file;
     # COOKIE SECURE FLAG
     COOKIE_SECURE = env.bool("COOKIE_SECURE")
     COOKIE_TIME = 1800
+
+We are configuring django restframework settings, setting `AUTH_USER_MODEL` to the `User` class we will creating in the `users` app we will be creating. And adding `COOKIE_TIME` and `COOKIE_SECURE` which will be false in local and true in our Docker production.
     
 ###  Setting Up Docker and Okteto
+
+We will create a bash script that creates our migration files, runs migrations and then starts up our server. 
+`run_web.sh`
+
+
+    #!/bin/sh
+    
+    #prepare init migration
+    python manage.py makemigrations myproject
+    echo "Created migrations"
+    
+    # migrate db, so we have the latest db schema
+    python manage.py migrate
+    echo "Migrated DB to latest version"
+    
+    #start server
+    echo "Starting server"
+    gunicorn simple_rbas.wsgi
 
 Create a `Dockerfile` in the root folder add the following:
 
@@ -295,7 +321,7 @@ Create a `Dockerfile` in the root folder add the following:
     COPY . /simple_rbas/
     
     WORKDIR /simple_rbas
-    CMD ["gunicorn", "simple_rbas.wsgi"]
+    CMD ["run_web.sh"]
 
 Create a `okteto-stack.yml`, and add the following lines;
 
@@ -325,11 +351,15 @@ Create a `okteto-stack.yml`, and add the following lines;
         resources:
           cpu: 100m
           memory: 128Mi
+        env_file:
+            - .env
         environment:
-          - DJANGO_READ_DOT_ENV_FILE=true
-          - DATABASE_URL=postgresql://pguser:pgpass@notes-db:5432/pgdb
-          - COOKIE_SECURE=false
-          - DEBUG=false
+        - DJANGO_READ_DOT_ENV_FILE=true
+        - DATABASE_URL=postgresql://pguser:pgpass@notes-db:5432/pgdb
+        - COOKIE_SECURE=true
+        - DEBUG=false
+
+
 
 The `okteto-stack.yml` file is similar to the `docker-compose.yml` file. In the stack file, we are configuring two services: 
 
@@ -364,7 +394,7 @@ In `users/models.py`, add the following lines:
         )
         level = models.SmallIntegerField(choices=LEVEL_CHOICES, db_index=True, default=READ_ONLY)
 
-Authorization on the API will be based user’s level. Only `Owner` users can have access to all views. 
+Authorization on the API will be based on the user’s level property. Only `Owner` users can have access to all views.  
 
 Next, you need a `users/serializers.py` file to serialize, and deserialize responses and request for our users and signing up.
 
@@ -639,59 +669,41 @@ Here were are assigning the views we created to routes:
     ]
 ## Deploying to Okteto
 
-Now we will  be deploying our API and to Docker and Okteto Cloud.
+Now we will  be deploying our API and to  Okteto Cloud.
 
-Get an account on Okteto and run this command;
+After [Installing Okteto CLI](https://okteto.com/docs/getting-started/installation/index.html).
+
+Sign up for a [free Okteto Cloud account](https://cloud.okteto.com) and then run this command;
 
     $ okteto namespace
+
+This downloads k8s credentials for a Kubernetes namespace.
 
 Next we try building and deploying to Okteto:
 
 
     $ okteto stack deploy --build
 
-This creates our Docker image from our `Dockerfile`, and builds the services in the `okteto-stack.yml` file. 
+This command will be our API's container image using our `Dockerfile`, and then deploy the services in Okteto Cloud.
 
-Next, go to the Okteto Dashboard settings, and the secrets tab and add your secret key(gotten from your django settings or .env) for your Docker image:
+Now our API is live!!!
 
-![](https://paper-attachments.dropbox.com/s_63C04585E62AD95AAE546582E54FC11FBBFCB4DF4EB5E31E04B3F30729CE7718_1616271618177_okteto-dashboard.png)
-
-
-Now to run migrations and set up your app finally:
-
-
-    $ okteto up
-
-Select the yes (y) option to create a `okteto.yml`. 
-
-This sets up a development container for you.  `exit` and edit line 4:
-
-    image: okteto.dev/simple-rbas:latest
-
-Now run `okteto up` again
-
-Run:
-
-    $ python manage.py makemigrations
-    $ python manage.py migrate
-
-
-Testing
+### Testing
 
 Now to  test with the endpoint provide by `Okteto`, go to the dashboard and get the endpoint:
 
 Here are some few tests on Postman;
-Sign Up User:
+#### Sign Up User:
 
 ![](https://paper-attachments.dropbox.com/s_63C04585E62AD95AAE546582E54FC11FBBFCB4DF4EB5E31E04B3F30729CE7718_1616272116661_SignUp.png)
 
 
-Login:
+#### Login User:
 
 ![](https://paper-attachments.dropbox.com/s_63C04585E62AD95AAE546582E54FC11FBBFCB4DF4EB5E31E04B3F30729CE7718_1616272160413_Login.png)
 
 
-Admin User:
+#### Admin User:
 
 ![](https://paper-attachments.dropbox.com/s_63C04585E62AD95AAE546582E54FC11FBBFCB4DF4EB5E31E04B3F30729CE7718_1616272190583_Admin+User.png)
 
