@@ -37,7 +37,7 @@ To get started, fork the sample application from its repository [here](https://g
        $ git clone https://github.com/{{GITHUB_USERNAME}}/okteto-flask-app
     ```
 
-In the `flaskr.py` file, there are three API routes defined for performing a create, retrieve and delete operation against a connected Couch database.
+In the `flaskr.py` file, there are three API routes defined for performing a create, retrieve and delete operation against a connected [Couch database](https://couchdb.apache.org/).
 
 The cloned project also contains a `Dockerfile` and `docker-compose.yml` file that contains all defined steps and services needed to create a multi-stage build for this application.
 
