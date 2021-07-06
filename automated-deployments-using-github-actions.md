@@ -97,8 +97,9 @@ One important step within any continuous integration pipeline is to **Test** new
 
 Execute the command below from your terminal to create a new [git branch](https://git-scm.com/docs/git-branch) where you would create unit tests for the flask API.
 
-
-    `$ git checkout -b feat/ci-pipeline`
+   ```console
+        $ git checkout -b feat/ci-pipeline
+    ```
 
 From your code editor, create a `tests` directory with a `test_flask.py` file within the `okteto-flask-app` project. This file would be used to test the three API endpoints within the flask application.
 
