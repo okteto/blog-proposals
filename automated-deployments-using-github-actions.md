@@ -84,7 +84,7 @@ Next, build a docker image of the entire application using the `docker-compose.y
        $ okteto stack deploy --build
     ```
 
-Going through the resources listed in your okteto cloud account, you would find the deployed docker image, and the two services specified in the `docker-compose.yml` file.
+Going through the resources listed in your Okteto cloud account, you would find the deployed application, and the two services specified in the `docker-compose.yml` file.
 
 
 ![Okteto Cloud namespace showing deployed image](./flask_app_couch_data.png)
