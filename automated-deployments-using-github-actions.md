@@ -80,8 +80,9 @@ To begin the deployment from your terminal using the Okteto CLI, execute the com
 
 Next, build a docker image of the entire application using the `docker-compose.yml` file and deploy it to your Okteto cloud namespace:
 
-
-    `$ okteto stack deploy --build`
+   ```console
+       $ okteto stack deploy --build
+    ```
 
 Going through the resources listed in your okteto cloud account, you would find the deployed docker image, and the two services specified in the `docker-compose.yml` file.
 
