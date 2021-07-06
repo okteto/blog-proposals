@@ -328,7 +328,7 @@ All subsequent commits and pull requests would go through this workflow build pr
 
 # Conclusion
 
-Within this article, you cloned a sample python application, built and deployed a docker image of the application to the Okteto cloud, then you automated the testing and deployment of your application’s docker  image to your cloud Okteto namespace using a GitHub Action workflow.
+In this article, you cloned a sample python application, built and deployed a docker image of the application to the Okteto cloud, then you automated the testing and deployment of your application’s docker  image to your cloud Okteto namespace using a GitHub Action workflow.
 
 As suggested within the article, you can set up a [deployment preview](https://okteto.com/blog/preview-environments-for-kubernetes/) workflow to create a preview separately for each pull request opened in your project’s repository. [This](https://okteto.com/blog/deploying-preview-environments-for-docker-compose-applications-using-okteto-and-github/) tutorial explains the process of creating a preview deployment workflow for Docker compose applications.
 
