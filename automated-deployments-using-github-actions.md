@@ -65,7 +65,11 @@ To view the data inserted from the `POST` request above, execute the command bel
 
 You can also work with the running couch database through the [Fauxton web interface](https://couchdb.apache.org/fauxton-visual-guide/index.html) that comes by default with couchdb image at [http://localhost:5984/_utils](http://localhost:5984/_utils).
 
+<<<<<<< HEAD
 > **Note**: As defined in the environment field within the database service in the `docker-compose.yml` file, the couchdb username is **couchdb-admin**, while the password is **couchdb-password**. Feel free to change them to your own preferred secured values.
+=======
+> As defined in the environment field within the database service in the `docker-compose.yml` file, the couchdb username is **couchdb-admin**, while the password is **couchdb-password**. Feel free to change them to your own preferred secured values.
+>>>>>>> 028a8ffff2211f25f23cd7723a148ab6734dc563
 
 
 ## Step 2: Deploy Flask Application To Okteto Cloud
@@ -74,6 +78,7 @@ Now you have the cloned application working locally on your computer. You will d
 
 To begin the deployment from your terminal using the Okteto CLI, execute the command below to login and create a session between your okteto cloud account and your local terminal;
 
+<<<<<<< HEAD
 
     `$ okteto login`
 
@@ -83,6 +88,19 @@ Next, build a docker image of the entire application using the `docker-compose.y
     `$ okteto stack deploy --build`
 
 Going through the resources listed in your okteto cloud account, you would find the deployed docker image, and the two services specified in the `docker-compose.yml` file.
+=======
+   ```console
+       $ okteto login
+    ```
+
+Next, build a docker image of the entire application using the `docker-compose.yml` file and deploy it to your Okteto cloud namespace:
+
+   ```console
+       $ okteto stack deploy --build
+    ```
+
+Going through the resources listed in your Okteto cloud account, you would find the deployed application, and the two services specified in the `docker-compose.yml` file.
+>>>>>>> 028a8ffff2211f25f23cd7723a148ab6734dc563
 
 
 ![Okteto Cloud namespace showing deployed image](./flask_app_couch_data.png)
@@ -95,12 +113,22 @@ One important step within any continuous integration pipeline is to **Test** new
 
 Execute the command below from your terminal to create a new [git branch](https://git-scm.com/docs/git-branch) where you would create unit tests for the flask API.
 
+<<<<<<< HEAD
 
     `$ git checkout -b feat/ci-pipeline`
 
 From your code editor, create a `tests` directory with a `test_flask.py` file within the `okteto-flask-app` project. This file would be used to test the three API endpoints within the flask application.
 
 > **Note**: All HTTP requests that were to be made to the Couch Apiserver from the API routes were intercepted and mocked in the test suites using the [Httpretty package](https://httpretty.readthedocs.io/).
+=======
+   ```console
+        $ git checkout -b feat/ci-pipeline
+    ```
+
+From your code editor, create a `tests` directory with a `test_flask.py` file within the `okteto-flask-app` project. This file would be used to test the three API endpoints within the flask application.
+
+> All HTTP requests that were to be made to the Couch Apiserver from the API routes were intercepted and mocked in the test suites using the [Httpretty package](https://httpretty.readthedocs.io/).
+>>>>>>> 028a8ffff2211f25f23cd7723a148ab6734dc563
 
 Add the test suite in the code block below to test the default route handler that returns a response with some information about the REST API.
 
