@@ -103,7 +103,7 @@ Execute the command below from your terminal to create a new [git branch](https:
 
 From your code editor, create a `tests` directory with a `test_flask.py` file within the `okteto-flask-app` project. This file would be used to test the three API endpoints within the flask application.
 
-> **Note**: All HTTP requests that were to be made to the Couch Apiserver from the API routes were intercepted and mocked in the test suites using the [Httpretty package](https://httpretty.readthedocs.io/).
+> All HTTP requests that were to be made to the Couch Apiserver from the API routes were intercepted and mocked in the test suites using the [Httpretty package](https://httpretty.readthedocs.io/).
 
 Add the test suite in the code block below to test the default route handler that returns a response with some information about the REST API.
 
