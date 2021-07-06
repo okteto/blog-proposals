@@ -33,9 +33,9 @@ In order to follow along with this tutorial, it is expected that you satisfy the
 To get started, fork the sample application from its repository [here](https://github.com/vickywane/okteto-flask-app). After forking the repository, execute the command below from your terminal to clone your forked copy of the repository to your host machine;
 
 > **Note**: *Replace the* `*GITHUB_USERNAME*` *in the URL below with your GitHub username to match the remote origin of the forked repository.*
-
-    `$ git clone https://github.com/{{GITHUB_USERNAME}}/okteto-flask-app`
-
+    ```console
+       $ git clone https://github.com/{{GITHUB_USERNAME}}/okteto-flask-app
+    ```
 
 In the `flaskr.py` file, there are three API routes defined for performing a create, retrieve and delete operation against a connected Couch database.
 
