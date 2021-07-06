@@ -44,7 +44,8 @@ The cloned project also contains a `Dockerfile` and `docker-compose.yml` file th
 To run this application, execute the [docker-compose](https://docs.docker.com/compose/) command below to build and run the application container that consists of a `database` and `app` service.
 
 
-    `$ docker-compose up --build`
+   ```console
+       $ docker-compose up --build
 
 To test the application above, execute the command below from a new terminal window to make a POST request to the `/api/customer` api route within the flask API using [cURL](https://curl.se/) which inserts a new document into the customer collection within the running Couch database through it’s RESTful Apiserver.
 
