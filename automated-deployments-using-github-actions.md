@@ -312,7 +312,7 @@ Going through the workflow logs shown in the image below, you would notice that 
 ![Highlighted step in Github Action workflow not executed](okteto-highlight.png)
 
 
-> **Note**: When working with pull requests for your project managed with Okteto, you should set up a [preview deployment](https://okteto.com/blog/preview-environments-for-kubernetes/) workflow. [This](https://okteto.com/blog/deploying-preview-environments-for-docker-compose-applications-using-okteto-and-github/) tutorial explains the process of creating a preview deployment workflow for Docker compose applications.
+> When working with pull requests for your project managed with Okteto, you should set up a [preview deployment](https://okteto.com/blog/preview-environments-for-kubernetes/) workflow. [This](https://okteto.com/blog/deploying-preview-environments-for-docker-compose-applications-using-okteto-and-github/) tutorial explains the process of creating a preview deployment workflow for Docker compose applications.
 
 Review and merge the changes within the pull request to trigger the GitHub Actions workflow directly against the master branch, this time executing the "Build and deploy" step to redeploy the image on Okteto.
 
