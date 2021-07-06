@@ -190,7 +190,7 @@ The command above added into the `Dockerfile` will launch the [pytest](https://p
 
 To create a workflow for this application from your computer, create a `.github` folder with a `workflows` sub-folder, and a `ci.yml` file in it.
 
-> **Note**: You can also create an action workflow directly on GitHub from the [Actions tab](https://docs.github.com/en/actions/guides/setting-up-continuous-integration-using-workflow-templates).
+> You can also create an action workflow directly on GitHub from the [Actions tab](https://docs.github.com/en/actions/guides/setting-up-continuous-integration-using-workflow-templates).
 
 Using your code editor, navigate to the recently created `ci.yml` file and add the code block below to create the initial workflow with the name of “**Okteto Flask REST API CI**”.
 
