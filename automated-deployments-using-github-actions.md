@@ -56,9 +56,9 @@ To test the application above, execute the command below from a new terminal win
 
 To view the data inserted from the `POST` request above, execute the command below from your terminal to make a GET request to the `/api/customer` api route within the flask API using [cURL](https://curl.se/) which retrieves all documents in the customer collection within the couch database.
 
-
-    `$ curl http://localhost:5050/api/customer`
-
+   ```console
+       $ curl http://localhost:5050/api/customer`
+    ```
 
 ![GET request using curl from a terminal to fetch data from /api/customer endpoint](./flask_app_couch_data.png)
 
