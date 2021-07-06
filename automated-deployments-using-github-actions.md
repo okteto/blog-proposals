@@ -74,8 +74,9 @@ Now you have the cloned application working locally on your computer. You will d
 
 To begin the deployment from your terminal using the Okteto CLI, execute the command below to login and create a session between your okteto cloud account and your local terminal;
 
-
-    `$ okteto login`
+   ```console
+       $ okteto login
+    ```
 
 Next, build a docker image of the entire application using the `docker-compose.yml` file and deploy it to your Okteto cloud namespace:
 
