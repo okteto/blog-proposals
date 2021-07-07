@@ -101,7 +101,13 @@ Execute the command below from your terminal to create a new [git branch](https:
         $ git checkout -b feat/ci-pipeline
     ```
 
-From your code editor, create a `tests` directory with a `test_flask.py` file within the `okteto-flask-app` project. This file would be used to test the three API endpoints within the flask application.
+From your code editor, create a `tests` directory with a `test_flask.py` file within the `okteto-flask-app` project. This file would be used to test the three API endpoints within the flask application. Executing the commands below will create the test file, or you can alternatively use the editor interface to create the file.
+
+    ```console
+        mkdir tests && cd tests
+
+        touch test_flaskr.py
+    ```
 
 > All HTTP requests that were to be made to the Couch Apiserver from the API routes were intercepted and mocked in the test suites using the [Httpretty package](https://httpretty.readthedocs.io/).
 
@@ -220,28 +226,39 @@ jobs:
          run: pip install -r requirements.txt
 ```
 
-Next, to begin automating the deployment process of the application to okteto, use the [okteto-login](https://github.com/okteto/login) action to create a session between the workflow build and your namespace.
+Next, to begin automating the deployment process of the docker image to okteto, you need to create a [personal access token](https://okteto.com/docs/cloud/personal-access-tokens/index.html). This token would be used with the [okteto-login](https://github.com/okteto/login) action to create a session between the workflow build and your namespace. The steps below explains the process of creating an okteto personal access token through your Okteto cloud dashboard.
+
+1. From the developer settings section of the settings page within your Okteto dashboard, click the **New Token** button to generate a new token. 
+
+![Create personal access token](okteto-generate-token.png)
+
+After generating the token above, the token would be displayed to you in the dashboard. You would store it in a [GitHub secret](/home/iamnwani/Desktop/articles/okteto/blog-proposals/automated-deployments-using-github-actions.md) next. 
+
+> If you encounter an error while generating the token, see the [Personal Access Token](https://okteto.com/docs/cloud/personal-access-tokens/index.html) section of the Okteto developer documentation for more in-depth details on how to create a personal access token.
+
+2. From the forked repository, navigate to the **Settings** tab. Click the **Secrets** column within the left navigation bar, then click on the **New Repository Secrets** to create a new secret having `OKTETO_TOKEN` as the secret name and the previously generated okteto token as it's value. 
+
+![Create personal access token](github-secret.png)
+
 
 Add the code block below into the `ci.yml` file. The code block contains a new step that uses the [okteto-login](https://github.com/okteto/login) action with your okteto [personal access token](https://okteto.com/docs/cloud/personal-access-tokens/index.html) in the step’s environment variables to create a session between your okteto account, and the current workflow build.
 
-> **Note**: See the [Personal Access Token](https://okteto.com/docs/cloud/personal-access-tokens/index.html) section of the Okteto developer documentation on how to create a token using the Okteto cloud or Okteto CLI.
-
 
 ```yaml
-- name: Verify okteto namespace
-  uses: okteto/namespace@master
-  with:
-    namespace: vickywane
+    - name: Login to Okteto Cloud
+        uses: okteto/login@master
+        with:
+        token: ${{ secrets.OKTETO_TOKEN }}
 ```
 
-Next, verify your Okteto namespace is active using the [okteto-namespace](https://github.com/okteto/namespace) action within the step in the code block below;
+Next, verify your Okteto namespace is active using the [okteto-namespace](https://github.com/okteto/namespace) action within the step in the code block below, replacing the `OKTETO_NAMESPACE` value with your Okteto namespace.
 
 
 ```yaml
 - name: Verify okteto namespace
   uses: okteto/namespace@master
   with:
-    namespace: vickywane
+    namespace: OKTETO_NAMESPACE
 ```
 
 Lastly, add the step from the code block below in the `ci.yml` file to use the okteto-deploy action to build an image of the application using the namespace validated by the [okteto-namespace](https://github.com/okteto/namespace) action above, then deploy the image to the Okteto registry.
