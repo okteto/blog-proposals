@@ -21,9 +21,9 @@ For this article, we will be using [GitHub Actions](https://github.com/features/
 In order to follow along with this tutorial, it is expected that you satisfy the following requirements;
 
 
-- Have an [Okteto Cloud](https://okteto.com/) Account
-- Have the [Okteto CLI](https://okteto.com/docs/getting-started/installation/index.html) installed on your machine
-- Have a [GitHub account](https://github.com/) with [Git](https://git-scm.com/) installed on your machine
+- Have an [Okteto Cloud](https://okteto.com/) Account.
+- Have the [Okteto CLI](https://okteto.com/docs/getting-started/installation/index.html) installed on your machine.
+- Have a [GitHub account](https://github.com/) with [Git](https://git-scm.com/) installed on your machine.
 - Have an understanding of the [Python](https://www.python.org/) programming language, with an installation of [python](https://www.python.org/) on your machine.
 - Have an installation of [Docker](https://www.docker.com/) on your machine.
 
@@ -32,7 +32,8 @@ In order to follow along with this tutorial, it is expected that you satisfy the
 
 To get started, fork the sample application from its repository [here](https://github.com/vickywane/okteto-flask-app). After forking the repository, execute the command below from your terminal to clone your forked copy of the repository to your host machine;
 
-> **Note**: *Replace the* `*GITHUB_USERNAME*` *in the URL below with your GitHub username to match the remote origin of the forked repository.*
+> Replace the `GITHUB_USERNAME` in the URL below with your GitHub username to match the remote origin of the forked repository.
+
     ```console
        $ git clone https://github.com/{{GITHUB_USERNAME}}/okteto-flask-app
     ```
@@ -46,6 +47,7 @@ To run this application, execute the [docker-compose](https://docs.docker.com/co
 
    ```console
        $ docker-compose up --build
+    ```
 
 To test the application above, execute the command below from a new terminal window to make a POST request to the `/api/customer` api route within the flask API using [cURL](https://curl.se/) which inserts a new document into the customer collection within the running Couch database through it’s RESTful Apiserver.
 
@@ -72,7 +74,7 @@ You can also work with the running couch database through the [Fauxton web inter
 
 Now you have the cloned application working locally on your computer. You will deploy the cloned version to the Okteto cloud to serve as your production deployment. The folder already contains a `Dockerfile` and a `docker-compose.yml` file that defines the services and steps needed to build the image for this application.
 
-To begin the deployment from your terminal using the Okteto CLI, execute the command below to login and create a session between your okteto cloud account and your local terminal;
+To begin the deployment from your terminal using the Okteto CLI, execute the command below to login and create a session between your Okteto cloud account and your local terminal;
 
    ```console
        $ okteto login
@@ -306,8 +308,12 @@ After opening a pull request, the GitHub Actions checks would be triggered and t
 
 
 The workflow log above shows that all steps defined in the `ci.yml` file were executed successfully.
-You can further verify that the application image within the namespace was redeployed by checking your Okteto account to see when the last deployment was made.
 
+You can further verify that the application image within the namespace was redeployed by checking your Okteto dashboard to see when the last deployment was made. 
+
+The highlighted **Last Updated** section shown in the image below, shows that the entire docker image stack being deployed in this tutorial was redeployed on Okteto after the CI workflow was completed.
+
+![Redeployed docker image on Okteto dashboard](redeployed-dashboard.png)
 
 ## Step 5: Restricting Automated Deployments
 
@@ -323,6 +329,49 @@ To make this adjustment, add a [if conditional statement](https://docs.github.co
    with:
     name: okteto-flask-app
     build: true
+```
+
+With the last additon, the entire `ci.yml` should have the following lines of code below;
+
+```yaml
+name: Okteto Flask REST API CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v2
+    - name: Install python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3
+
+    - name: Install python dependencies
+      run: pip install -r requirements.txt
+
+    - name: Login to Okteto Cloud
+      uses: okteto/login@master
+      with:
+        token: ${{ secrets.OKTETO_TOKEN }}
+
+    - name: Activate application namespace
+      uses: okteto/namespace@master
+      with:
+        namespace: vickywane
+
+    - name: Build and deploy application image to Production Okteto Namespace
+      if: ${{ github.event_name == 'push' }}
+      uses: okteto/deploy-stack@master
+      with:
+        name: okteto-flask-app
+        build: true
 ```
 
 Commit and push the changes to the `ci.yml` file above to trigger the GitHub actions workflow for the pull request.
@@ -354,4 +403,3 @@ In this article, you cloned a sample python application, built and deployed a do
 As suggested within the article, you can set up a [deployment preview](https://okteto.com/blog/preview-environments-for-kubernetes/) workflow to create a preview separately for each pull request opened in your project’s repository. [This](https://okteto.com/blog/deploying-preview-environments-for-docker-compose-applications-using-okteto-and-github/) tutorial explains the process of creating a preview deployment workflow for Docker compose applications.
 
 The completed application is available on GitHub and can be found in [this repository](https://github.com/vickywane/okteto-flask-app), for you to clone and use.
-``````````
