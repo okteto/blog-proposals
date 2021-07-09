@@ -283,9 +283,8 @@ To test the new GitHub actions setup, execute the commands below from your termi
 1. Create a local commit containing all added changes with a message:
 
 
-    `$ git commit -m "ci: implemented unit tests for api and project ci workflow" `
-
-
+```console
+     $ git commit -m "ci: implemented unit tests for api and project ci workflow" `
 2. Push your local commit to your forked copy of the repository:
 
 
