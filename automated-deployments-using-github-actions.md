@@ -278,10 +278,8 @@ To test the new GitHub actions setup, execute the commands below from your termi
 
 1. First, add all the new changes within the flask application:
 
-
-    `$ git add . `
-
-
+```console
+     $ git add .
 1. Create a local commit containing all added changes with a message:
 
 
