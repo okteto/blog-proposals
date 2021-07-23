@@ -129,7 +129,7 @@ Now run `$ docker-compose build` and then `$ docker-compose up`
 
 You'll see that your react application is running on port `localhost:8080`
 
-![](First-image)
+
 ##Build Application in Okteto
 First, you have to [install  Okteto CLI](https://okteto.com/docs/getting-started/installation) to access Okteto's development environment.
 
