@@ -336,8 +336,8 @@ export const Form = ({input, onFormChange, onFormSubmit}) => {
     return(
         <>
         <form onSubmit={handleSubmit}>
-            <input type='text' required value={input} onChange={handleChange}></input>
-            <input type='submit'></input>
+            <input className='form-class' type='text' required value={input} onChange={handleChange}></input>
+            <input  type='submit'></input>
         </form>
         </>
     )
@@ -357,8 +357,7 @@ export const Card = ({ listOfTodos }) => {
             
           <ul key={todo.id}>
               
-
-            <li><Link to={`${todo.id}`}>{todo.detail}</Link></li>
+            <li className="links"><Link to={`${todo.id}`}>{todo.detail}</Link></li>
           </ul>
         );
       })}
@@ -540,12 +539,44 @@ Run `$ touch .env` in the `frontend` folder.
 In the file you just created, put the statement:
 `DANGEROUSLY_DISABLE_HOST_CHECK=true` .
 
-While doing all these updates, Okteto is synchronising the changes with your application deployed on Okteto.
+Update your `App.css` file to contain this, just to add a little styling:
+```css
+
+*{
+    text-decoration: none;
+} 
+
+body {
+  font-size: 1.6rem; 
+  background-color: #efefef;
+  color: #324047
+}
+
+
+.App-header{
+padding-left: 500px;
+}
+
+.form-class{
+margin-top: 100px;
+}
+
+.links{
+  position: relative;
+  list-style-type: square;
+  padding-left: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+```
+
+While doing all these updates, Okteto is synchronizing the changes with your application deployed on Okteto.
 Now run `$ npm start` to start the server and go back to the URL  you got from Okteto cloud home page. You'll see that you can view and create todos.
+
 
   ![image 3]()
 
-Next we will build the update and delete functionality. In the `src/components` folder create a new file `deletePage.js`.
+Next, you will build the update and delete functionality. In the `src/components` folder create a new file `deletePage.js`.
 
 ```jsx
 import React from "react"
@@ -639,9 +670,9 @@ export const Detail = () => {
 };
 
 ```
-Now click on the a particular todo and you should see something like this:
+Now click on the particular todo and you should see something like this:
 
   ![image 4]()
 ## Conclusion
-In this article I took you on how to build and run a Flask and React application with Docker and deploy it easily to Okteto. Deploying you application to Okteto can help you see what your application will look like during deployment as you are building or making changes. It will also free up your local machine since you will be running the server on the cloud. From this tutorial, I am hopeful that you will be able to work with Okteto in your current or future Flask and React projects.
+In this article, I took you on how to build and run a Flask and React application with Docker and deploy it easily to Okteto. Deploying you application to Okteto can help you see what your application will look like during deployment as you are building or making changes. It will also free up your local machine since you will be running the server on the cloud. From this tutorial, I am hopeful that you will be able to work with Okteto in your current or future Flask and React projects.
 You can find the code used in this article on GitHub.
