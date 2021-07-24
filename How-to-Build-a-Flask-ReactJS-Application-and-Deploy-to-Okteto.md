@@ -129,6 +129,7 @@ Now run `$ docker-compose build` and then `$ docker-compose up`
 
 You'll see that your react application is running on port `localhost:8080`
 
+![image 5]()
 
 ##Build Application in Okteto
 First, you have to [install  Okteto CLI](https://okteto.com/docs/getting-started/installation) to access Okteto's development environment.
@@ -507,27 +508,11 @@ function App() {
 
 export default App;
 ```
-There are some tools I used but haven't installed yet, so what you will do is update your `package.json` file to look like below:
-```json
-{
-  "name": "frontend",
-  "version": "0.1.0",
-  "proxy": "http://api:5000",
-  "private": true,
-  "dependencies": {
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^11.2.7",
-    "@testing-library/user-event": "^12.8.3",
-    "react": "^16.13.1",
-    "react-dom": "^17.0.2",
-    "react-router": "5.2.0",
-    "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.3",
-    "web-vitals": "^1.1.2"
-  },
-  ...
-```
-Because you are working on Okteto cloud your changes are synchronized automatically. So what you will do now is, on your terminal navigate to the folder where `package.json` and run `npm install` when that is done run `npm start` 
+
+
+Because you are working on Okteto cloud your changes are synchronized automatically. 
+There are some tools I used but haven't installed yet. So what you will do now is, on your terminal navigate to the folder where `package.json` and run `npm install react-router-dom react-router` to install the router packages, then run `npm install` to install the react packages in `package.json` file.
+When that is done run `npm start`. 
 NB: You must be in okteto development container (`okteto up`)
 
 Go to Okteto cloud, there are 2 endpoints displayed on, click on the one that starts with "web".
