@@ -361,7 +361,7 @@ jobs:
       with:
         namespace: vickywane
 
-    - name: Build and deploy application image to Production Okteto Namespace
+    - name: Build and deploy application image to Okteto
       if: ${{ github.event_name == 'push' }}
       uses: okteto/deploy-stack@master
       with:
