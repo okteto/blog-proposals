@@ -1,4 +1,4 @@
-# Automating Okteto cloud workflows using Okteto Actions and GitHub Actions.
+# Automating the deployment of your development environment using Okteto Actions and GitHub Actions.
 
 ## Introduction
 
@@ -72,7 +72,7 @@ You can also work with the running couch database through the [Fauxton web inter
 
 ## Step 2: Deploy Flask Application To Okteto Cloud
 
-Now you have the cloned application working locally on your computer. You will deploy the cloned version to the Okteto cloud to serve as your production deployment. The folder already contains a `Dockerfile` and a `docker-compose.yml` file that defines the services and steps needed to build the image for this application.
+Now you have the cloned application working locally on your computer. You will deploy the cloned version to the Okteto cloud to serve as a deployment for your development environment. The folder already contains a `Dockerfile` and a `docker-compose.yml` file that defines the services and steps needed to build the image for this application.
 
 To begin the deployment from your terminal using the Okteto CLI, execute the command below to login and create a session between your Okteto cloud account and your local terminal;
 
@@ -323,7 +323,7 @@ To make this adjustment, add a [if conditional statement](https://docs.github.co
 
 
 ```yaml
- - name: Build and deploy application image to Production Okteto Namespace
+ - name: Build and deploy application image to Development Okteto Namespace
    if: ${{ github.event_name == 'push' }}
    uses: okteto/deploy-stack@master
    with:
@@ -366,7 +366,7 @@ jobs:
       with:
         namespace: vickywane
 
-    - name: Build and deploy application image to Production Okteto Namespace
+    - name: Build and deploy application image to Development Okteto Namespace
       if: ${{ github.event_name == 'push' }}
       uses: okteto/deploy-stack@master
       with:
@@ -376,7 +376,7 @@ jobs:
 
 Commit and push the changes to the `ci.yml` file above to trigger the GitHub actions workflow for the pull request.
 
-Going through the workflow logs shown in the image below, you would notice that the highlighted “**Build and deploy application image to Production Okteto Namespace**” step in the build workflow was not executed as expected.
+Going through the workflow logs shown in the image below, you would notice that the highlighted “**Build and deploy application image to Development Okteto Namespace**” step in the build workflow was not executed as expected.
 
 
 ![Highlighted step in Github Action workflow not executed](okteto-highlight.png)
