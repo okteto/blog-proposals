@@ -278,22 +278,17 @@ To test the new GitHub actions setup, execute the commands below from your termi
 
 1. First, add all the new changes within the flask application:
 
-
-    `$ git add . `
-
-
+```console
+     $ git add .
 1. Create a local commit containing all added changes with a message:
 
 
-    `$ git commit -m "ci: implemented unit tests for api and project ci workflow" `
-
-
+```console
+     $ git commit -m "ci: implemented unit tests for api and project ci workflow" `
 2. Push your local commit to your forked copy of the repository:
 
-
-    `$ git push  -u origin feat/ci-pipeline`
-
-
+```console
+     $ git push  -u origin feat/ci-pipeline
 3. Lastly, create a pull request from the `ci/okteto-actions` branch, to the project’s master branch in order for the changes to be merged after the actions checks have successfully been completed.
 
 
@@ -366,7 +361,7 @@ jobs:
       with:
         namespace: vickywane
 
-    - name: Build and deploy application image to Development Okteto Namespace
+    - name: Build and deploy application image to Okteto
       if: ${{ github.event_name == 'push' }}
       uses: okteto/deploy-stack@master
       with:
