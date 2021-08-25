@@ -335,15 +335,20 @@ To test the new GitHub actions setup, execute the commands below from your termi
 
 ```console
      $ git add .
+```
 1. Create a local commit containing all added changes with a message:
 
 
 ```console
-     $ git commit -m "ci: implemented unit tests for api and project ci workflow" `
+     $ git commit -m "ci: implemented unit tests for api and project ci workflow"
+```
+     
 2. Push your local commit to your forked copy of the repository:
 
 ```console
      $ git push  -u origin feat/ci-pipeline
+```
+
 3. Lastly, create a pull request from the `ci/okteto-actions` branch, to the project’s master branch in order for the changes to be merged after the actions checks have successfully been completed.
 
 
