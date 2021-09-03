@@ -81,10 +81,6 @@ Some of the popular Kubernetes monitoring tools include Prometheus, Grafana, Das
 
 Since Kubernetes is completely API-driven, your first strategy should be managing and restricting who has access to the cluster and what activities they are permitted to do. To help you in this pursuit, take a look at these Kubernetes security best practices and guidelines you should adhere to protect your infrastructure.
 
-### **Enable Role-Based Access Control (RBAC)**
-
-Role-Based Access Control (RBAC) allows you to control who has access to the Kubernetes API and the actions they can perform such as create, edit, and delete resources. Since the authorization controllers in Kubernetes are combined, you must activate RBAC and disable traditional Attribute-Based Access Control. Once RBAC has been implemented, you must ensure that it is used properly. For example, it is usually recommended to avoid using cluster-wide permissions in favor of namespace-specific permissions. If possible, avoid granting anybody cluster-admin rights, even for debugging purposes. It is far more secure to give access only when it is needed.
-
 ### **Enforce Resource Management using Policy-as-Code**
 
 You need proactive resource management to establish predefined limitations on the resources used by both pods and containerized workloads. For DevOps teams, it's the most effective method to manage the production environment and to improve both operations and security at the same time. You can take advantage of policy-as-code tools to scan configuration data and check if it conforms to the codified policies.
@@ -137,15 +133,15 @@ Cloud-native applications have diverse components and elements, making it impera
 
 It would help if you took advantage of recommended tools to secure and protect each of these layers. However, you should know that you don't have one tool that can help protect all these layers.
 
-### **Enable Kubernetes Role-Based Access Control**
+### **Enable Kubernetes Role-Based Access Control **(RBAC)
 
-Role-Based Access Control or RBAC is a critical security component of Kubernetes and one of the Kubernetes Deployment best practices. It enables you to implement access control rules to your Kube API; you may specify the permissions that should be granted to users through RBAC.
+Role-Based Access Control (RBAC) is a critical security component of Kubernetes and allows you to control who has access to the Kubernetes API and the actions they can perform such as create, edit, and delete resources. It enables you to implement access control rules to your Kube API; you may specify the permissions that should be granted to users through RBAC.
+
+Since the authorization controllers in Kubernetes are combined, you must activate RBAC and disable traditional Attribute-Based Access Control. Once RBAC has been implemented, you must ensure that it is used properly. For example, it is usually recommended to avoid using cluster-wide permissions in favor of namespace-specific permissions. If possible, avoid granting anybody cluster-admin rights, even for debugging purposes. It is far more secure to give access only when it is needed.
 
 Although RBAC is enabled by default, starting with Kubernetes 1.6, it should be used appropriately. It would be best if you took appropriate measures to minimize permission duplication and deactivate inactive and unused roles so that you can concentrate only on active components and avoid providing unnecessary permissions to a user.
 
-If you want to specify who has access to the Kubernetes API and what rights they have, RBAC may assist you in doing so. When you activate RBAC, you must also disable the old Attribute-Based Access Control (ABAC) mechanism.
-
-When implementing RBAC, you should prefer namespace-specific rights over cluster-wide permissions. Even while debugging, do not give cluster administrator access. It is safer to provide access only when required.
+If you want to specify who has access to the Kubernetes API and what rights they have, you should take advantage of RBAC. Note that when you activate RBAC, you must also disable the old Attribute-Based Access Control (ABAC) mechanism. Additionally, when implementing RBAC, you should prefer namespace-specific rights over cluster-wide permissions. Even while debugging, do not give cluster administrator access. It is safer to provide access only when required.
 
 ### **Protect etcd with TLS, Firewall and Encryption**
 
