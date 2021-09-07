@@ -1,4 +1,3 @@
-# Automating the deployment of your development environment using Okteto Actions and GitHub Actions.
 
 ## Introduction
 
@@ -34,9 +33,9 @@ To get started, fork the sample application from its repository [here](https://g
 
 > Replace the `GITHUB_USERNAME` in the URL below with your GitHub username to match the remote origin of the forked repository.
 
-    ```console
-       $ git clone https://github.com/{{GITHUB_USERNAME}}/okteto-flask-app
-    ```
+```console
+$ git clone https://github.com/{{GITHUB_USERNAME}}/okteto-flask-app
+```
 
 In the `flaskr.py` file, there are three API routes defined for performing a create, retrieve and delete operation against a connected [Couch database](https://couchdb.apache.org/).
 
@@ -44,23 +43,22 @@ The cloned project also contains a `Dockerfile` and `docker-compose.yml` file th
 
 To run this application, execute the [docker-compose](https://docs.docker.com/compose/) command below to build and run the application container that consists of a `database` and `app` service.
 
-
-   ```console
-       $ docker-compose up --build
-    ```
+```console
+$ docker-compose up --build
+```
 
 To test the application above, execute the command below from a new terminal window to make a POST request to the `/api/customer` api route within the flask API using [cURL](https://curl.se/) which inserts a new document into the customer collection within the running Couch database through it’s RESTful Apiserver.
 
 
-    ```console
-        $ curl -X POST -d '{"name":"Victory Nwani","occupation":"Software Engineer"}'  -H 'Content-Type: application/json' http://localhost:5050/api/customer
-     ```
+```console
+$ curl -X POST -d '{"name":"Victory Nwani","occupation":"Software Engineer"}'  -H 'Content-Type: application/json' http://localhost:5050/api/customer
+ ```
 
 To view the data inserted from the `POST` request above, execute the command below from your terminal to make a GET request to the `/api/customer` api route within the flask API using [cURL](https://curl.se/) which retrieves all documents in the customer collection within the couch database.
 
-   ```console
-       $ curl http://localhost:5050/api/customer`
-    ```
+```console
+$ curl http://localhost:5050/api/customer`
+```
 
 ![GET request using curl from a terminal to fetch data from /api/customer endpoint](./flask_app_couch_data.png)
 
@@ -76,15 +74,15 @@ Now you have the cloned application working locally on your computer. You will d
 
 To begin the deployment from your terminal using the Okteto CLI, execute the command below to login and create a session between your Okteto cloud account and your local terminal;
 
-   ```console
-       $ okteto login
-    ```
+```console
+$ okteto login
+```
 
 Next, build a docker image of the entire application using the `docker-compose.yml` file and deploy it to your Okteto cloud namespace:
 
-   ```console
-       $ okteto stack deploy --build
-    ```
+```console
+$ okteto stack deploy --build
+```
 
 Going through the resources listed in your Okteto cloud account, you would find the deployed application, and the two services specified in the `docker-compose.yml` file.
 
@@ -92,25 +90,24 @@ Going through the resources listed in your Okteto cloud account, you would find 
 ![Okteto Cloud namespace showing deployed image](./flask_app_couch_data.png)
 
 
-
 ## Step 3: Write Unit Tests For The Flask Application
 
-One important step within any continuous integration pipeline is to **Test** new commits made to the code source before a new release is pushed to the continuous deployment pipeline to avoid a regression. 
-For this application, you will use Okteto to create a development deployment of this API where you can run live API tests agaisnt. Without Okteto, this would have been an expensive operation to perform as it will involve the use of a Mock Server such as [Postman Mock](https://learning.postman.com/docs/designing-and-developing-your-api/mocking-data/setting-up-mock/) to return mock responses. 
+One important step within any continuous integration pipeline is to **Test** new commits made to the code source before a new release is pushed to the continuous deployment pipeline to avoid a regression.
 
 To get started, execute the command below from your terminal to create a new [git branch](https://git-scm.com/docs/git-branch) where you would create unit tests for the flask API.
 
-   ```console
-        $ git checkout -b feat/ci-pipeline
-    ```
+```console
+$ git checkout -b feat/ci-pipeline
+```
 
 From your code editor, create a `tests` directory with a `test_flask.py` file within the `okteto-flask-app` project. This file would be used to test the three API endpoints within the flask application. Executing the commands below will create the test file, or you can alternatively use the editor interface to create the file.
 
-    ```console
-        mkdir tests && cd tests
+```console
+$ mkdir tests && cd tests
+$ touch test_flaskr.py
+```
 
-        touch test_flaskr.py
-    ```
+> All HTTP requests that were to be made to the Couch Apiserver from the API routes were intercepted and mocked in the test suites using the [Httpretty package](https://httpretty.readthedocs.io/).
 
 Add the test suite in the code block below to test the default route handler that returns a response with some information about the REST API.
 
@@ -121,20 +118,18 @@ from requests import get, post
 
 STAGING_API_ENDPOINT = os.environ.get("STAGING_COUCHDB_URL")
 
-
 def test_handle_default_route():
-    request = get(STAGING_API_ENDPOINT)
-    response = request.json()
-    assert (response['status'] == "OK")
-    assert 'description' in response
+ request = get(STAGING_API_ENDPOINT)
+ response = request.json()
+ assert (response['status'] == "OK")
+ assert 'description' in response
 ```   
 
-The test suite above asserts that a JSON response containing an “**OK**” status, and description field will be returned each time a request is made to the default route. Looking through the code block, you might have taken note of the `STAGING_API_ENDPOINT` variable whose value will be gotten from the `STAGING_COUCHDB_URL` environment variable. The `STAGING_COUCHDB_URL` environment variable will be set during the continuous flow, and will point to a staging version of the API within an Okteto namespace. You will learn more about this when setting up the GitHub actions flow.    
+The test suite above asserts that a JSON response containing an “OK” status, and description field will be returned each time a request is made to the default route. Looking through the code block, you might have taken note of the `STAGING_API_ENDPOINT` variable whose value will be gotten from the `STAGING_COUCHDB_URL` environment variable. The `STAGING_COUCHDB_URL` environment variable will be set during the continuous flow, and will point to a staging version of the API within an Okteto namespace. You will learn more about this when setting up the GitHub actions flow.
 
-Next, add the code block below into the `test_flaskr.py` file to test the route POST request handler within the `api/customer` endpoint by making a POST HTTP verb to insert a new document into the customer collection.
+Next, add the code block below into the `test_flaskr.py` file to test the route POST request handler within the `api/customer` endpoint by making a POST HTTP verb to insert a new document into the `customer` collection.
 
 ```python
-
 def test_handle_items_post(): 
     request = post('/api/customer', json={
            'name': 'John Mike',
@@ -143,12 +138,12 @@ def test_handle_items_post():
     
     responseData = request.json()
     assert responseData['status'] == "USER CREATED"
+
 ```
 
-The test case above asserts that a `status` field with a `USER CREATED` value was returned from the POST request to insert a test document into the customer collection. 
-After the test case above is executed successfully, you can rightly expect that a sample document will exist within the customer collection. The next test case will use this sample document to assert that the GET handler within the `api/customer` endpoint.
+The test case above asserts that a `status` field with a `USER CREATED` value was returned from the POST request to insert a test document into the customer collection. After the test case above is executed successfully, you can rightly expect that a sample document will exist within the customer collection. The next test case will use this sample document to assert that the GET handler within the `api/customer` endpoint.
 
-Add the code block below into the `test_flaskr.py` file to test the route handling all requests made to the `api/customer` route with a GET HTTP verb to fetch all documents within the customer collection.
+Add the code block below into the `test_flaskr.py` file to test the route handling all requests made to the `api/customer` route with a GET HTTP verb to fetch all documents within the `customer` collection.
 
 ```python
 import json
@@ -162,11 +157,12 @@ def test_handle_items_fetch():
     assert '_id' in data['customers'][0]
 ```
 
-When the test case above is executed, a GET request will be made to the GET handler within `api/customer` route. The test case will further run assertions against the JSON response to ensure that an `OK` status field was returned, alongside a List of customers.
+When the test case above is executed, a GET request will be made to the GET handler within `api/customer` route. The test case will further run assertions against the JSON response to ensure that an OK status field was returned, alongside a List of customers.
 
 At this point we have three test suites to test the three corresponding endpoints exposed within this API.
 
 In the next step where you create the GitHub Action Workflow for this application, you will include a job to run the test suite within the `test_flaskr.py` file.
+
 ## Step 4: Create A GitHub Action Workflow To Automate Subsequent Deployments
 
 To create a workflow for this application from your computer, create a `.github` folder with a `workflows` sub-folder, and a `ci.yml` file in it.
@@ -220,68 +216,60 @@ Add the code block below into the `ci.yml` file. The code block contains a new s
 
 
 ```yaml
-    - name: Login to Okteto Cloud
-        uses: okteto/login@master
-        with:
-        token: ${{ secrets.OKTETO_TOKEN }}
+- name: Login to Okteto Cloud
+    uses: okteto/login@master
+    with:
+    token: ${{ secrets.OKTETO_TOKEN }}
+```
+Next, create a staging namespace for pull request that will trigger this Action workflow using the okteto's `deploy-preview` action within the step in the code block below, replacing the `OKTETO_USERNAME` placeholder with your Okteto username.
+
+```yml
+- name: Deploy your preview environment
+      uses: okteto/deploy-preview@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        name: staging-${{ github.event.number }}-OKTETO_USERNAME
+        scope: personal
+        timeout: 15m        
 ```
 
-Next, create a staging namespace for pull request that will trigger this Action workflow using the [okteto-create-namespace](https://github.com/okteto/create-namespace) action within the step in the code block below, replacing the `GITHUB_USERNAME` placeholder with your GitHub username.
+  
+The job above will also deploy the entire stack to the namespace specified in the `name` field within the `with` sub-section. Within the next job you will make reference to this staging deployment.
 
+Next, add a job to check if the entire stack has been deployed before proceeding.
 
-```yaml
-- name: Create staging namespace
-  uses: okteto/create-namespace@master
-  with:
-    namespace: staging-${{ github.event.number }}-{GITHUB_USERNAME}
-```
-
-Substituting the `GITHUB_USERNAME` placeholder for your GitHub username, add the step from the code block below in the `ci.yml` file to use the okteto-deploy action to build an image of the application within the namespace created by the [okteto-create-namespace](https://github.com/okteto/create-namespace) action.
-
-```yaml
-- name: Build and deploy image to Okteto
-  uses: okteto/deploy-stack@master
-  with:
-    name: staging-${{ github.event.number }}-{GITHUB_USERNAME}
-    build: true
-```
-
-The job above will also deploy the entire stack to the namespace specified in the `name` field within the `with` section. Within the next job you will make reference to this staging deployment. 
-
-Next, add a job to check if the entire stack has been deployed before proceeding.    
-
-```yaml
+```yml
 - uses: nev7n/wait_for_response@v1
   with:
-  url: https://api-staging-${{ github.event.number }}-vickywane.cloud.okteto.net
-    responseCode: 200
-    timeout: 4000
+    url: https://api-staging-${{ github.event.number }}-okteto_username.cloud.okteto.net
+  responseCode: 200
+  timeout: 4000
 ```
+Add the object below into the ci.yml file to run the test suite you created earlier using pytest. The job below will set the `STAGING_COUCHDB_URL` environment variable to the URL of the deployed stack, and the requests made from the test suite will be made against the staging deployment.
 
-Add the object below into the `ci.yml` file to run the test suite you created earlier using pytest. The job below will set the `STAGING_COUCHDB_URL` environment variable to the URL of the deployed stack, and the requests made from the test suite will be made against the staging deployment. 
-
-```yaml
+```yml
 - name: Run API tests agaisnt Staging Namespace
   run: pytest
   env:
-    STAGING_COUCHDB_URL: https://api-staging-${{ github.event.number }}-vickywane.cloud.okteto.net
+    STAGING_COUCHDB_URL: https://api-staging-${{ github.event.number }}-okteto_username.cloud.okteto.net
 ```
 
-After adding all the jobs above, ensure your `ci.yaml` file has the following structure and indentation levels;
+After adding all the jobs above, ensure your ci.yaml file has the following structure and indentation levels:
 
-```yaml
+```yml
 name: Okteto Flask REST API CI
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+push:
+branches: [ master ]
+pull_request:
+branches: [ master ]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
+build:
+runs-on: ubuntu-latest
+steps:
 
     - uses: actions/checkout@v2
     - name: Install python
@@ -297,27 +285,26 @@ jobs:
       with:
         token: ${{ secrets.OKTETO_TOKEN }}
 
-    - name: Create staging namespace
-      uses: okteto/create-namespace@master
+    - name: Deploy your preview environment
+      uses: okteto/deploy-preview@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        namespace: staging-${{ github.event.number }}-vickywane
-
-    - name: Deploy to Staging Flask Application Namespace
-      uses: okteto/deploy-stack@master
-      with:
-        name: staging-${{ github.event.number }}-vickywane
-        build: true
+        name: staging-${{ github.event.number }}-OKTETO_USERNAME
+        scope: personal
+        timeout: 15m
+        
 
     - uses: nev7n/wait_for_response@v1
       with:
-        url: https://api-staging-${{ github.event.number }}-vickywane.cloud.okteto.net
+        url: https://api-staging-${{ github.event.number }}-okteto_username.cloud.okteto.net
         responseCode: 200
         timeout: 4000
 
     - name: Run API tests agaisnt Staging Namespace
       run: pytest
       env:
-        STAGING_COUCHDB_URL: https://api-staging-${{ github.event.number }}-vickywane.cloud.okteto.net
+        STAGING_COUCHDB_URL: https://api-staging-${{ github.event.number }}-okteto_username.cloud.okteto.net
 
     - name: Build and deploy application container to Okteto Flask Namespace
       if: ${{ github.event_name == 'push' }}
@@ -327,26 +314,25 @@ jobs:
         build: true
 ```
 
-
 To test the new GitHub actions setup, execute the commands below from your terminal to commit and push the changes to your forked repository.
 
 
 1. First, add all the new changes within the flask application:
 
 ```console
-     $ git add .
+$ git add .
 ```
+
 1. Create a local commit containing all added changes with a message:
 
 
 ```console
-     $ git commit -m "ci: implemented unit tests for api and project ci workflow"
-```
-     
+$ git commit -m "ci: implemented unit tests for api and project ci workflow"
+ ```
 2. Push your local commit to your forked copy of the repository:
 
 ```console
-     $ git push  -u origin feat/ci-pipeline
+$ git push -u origin feat/ci-pipeline
 ```
 
 3. Lastly, create a pull request from the `ci/okteto-actions` branch, to the project’s master branch in order for the changes to be merged after the actions checks have successfully been completed.
@@ -354,17 +340,83 @@ To test the new GitHub actions setup, execute the commands below from your termi
 
 ![Create pull request](okteto-pull-request.png)
 
-
 After opening a pull request, the GitHub Actions checks would be triggered and the entire flow in the `ci.yml` file that includes creating a new build from the changes in the pull request and pushing the built image to the Okteto registry would be executed as shown below;
 
 
 ![GitHub Checks tab of opened pull request](okteto-actions-log.png)
 
-The workflow log above shows that all steps defined in the `ci.yml` file were executed successfully. 
-Taking a close look at the logs from the  "Run API tests agaisnt Staging Namespace" job, you will observe the `STAGING_COUCHDB_URL` environment variable holds the URL of the namespace created for the pull request, and all requests within the test suite were sent to this endpoint.
 
+The workflow log above shows that all steps defined in the `ci.yml` file were executed successfully.
+
+You can further verify that the application image within the namespace was redeployed by checking your Okteto dashboard to see when the last deployment was made. 
+
+The highlighted **Last Updated** section shown in the image below, shows that the entire docker image stack being deployed in this tutorial was redeployed on Okteto after the CI workflow was completed.
+
+![Redeployed docker image on Okteto dashboard](redeployed-dashboard.png)
+
+## Step 5: Restricting Automated Deployments
+
+With your current GitHub action workflow, all changes in the application pushed to GitHub would cause a redeployment of the application image on Okteto. This is however not an ideal process as a redeployment should only happen after you review and merge the new changes in a pull request.
+
+To make this adjustment, add a [if conditional statement](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idif) into the last “Build and Deploy” step in the `ci.yml` file that only evaluates to true when the `event_name` value is “**push**” indicating that the pull request has been merged, and the checks are being triggered to **push** the merged changes into the master branch.
+
+
+```yaml
+ - name: Build and deploy application image to Development Okteto Namespace
+   if: ${{ github.event_name == 'push' }}
+   uses: okteto/deploy-stack@master
+   with:
+    name: okteto-flask-app
+    build: true
+```
+
+With the last additon, the entire `ci.yml` should have the following lines of code below;
+
+```yaml
+name: Okteto Flask REST API CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Login to Okteto Cloud
+      uses: okteto/login@master
+      with:
+        token: ${{ secrets.OKTETO_TOKEN }}
+
+    - name: Activate application namespace
+      uses: okteto/namespace@master
+      with:
+        namespace: okteto_username
+
+    - name: Build and deploy application image to Okteto
+      if: ${{ github.event_name == 'push' }}
+      uses: okteto/deploy-stack@master
+      with:
+        name: okteto-flask-app
+        build: true
+```
+
+Commit and push the changes to the `ci.yml` file above to trigger the GitHub actions workflow for the pull request.
+
+Going through the workflow logs shown in the image below, you would notice that the highlighted “**Build and deploy application image to Development Okteto Namespace**” step in the build workflow was not executed as expected.
+
+
+![Highlighted step in Github Action workflow not executed](okteto-highlight.png)
+
+
+> When working with pull requests for your project managed with Okteto, you should set up a [preview deployment](https://okteto.com/blog/preview-environments-for-kubernetes/) workflow. [This](https://okteto.com/blog/deploying-preview-environments-for-docker-compose-applications-using-okteto-and-github/) tutorial explains the process of creating a preview deployment workflow for Docker compose applications.
+
+Review and merge the changes within the pull request to trigger the GitHub Actions workflow directly against the master branch, this time executing the "Build and deploy" step to redeploy the image on Okteto.
 
 You can view the Workflow build triggered by the merge from the **Actions** tab in the repository.
+
 
 ![Actions tab showing workflow build from merged pull request](okteto-ci-push.png)
 
