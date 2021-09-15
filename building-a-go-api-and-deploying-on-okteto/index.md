@@ -1,10 +1,8 @@
-### Why use GO?
-
 Go or Golang is an open-source, robust-system-level programming language used to build large-scale network servers and distributed systems. Go was developed by Google in 2007 as a statically-typed compiled language. 
 
 Considering Go is a member of the C-family, it has similar syntax with languages like Java and C++, but it has a more succinct syntax that makes it simpler to learn and understand. Making it easy to develop software that is fast, dependable, and efficient. Go also supports concurrent programming, i.e. it allows running multiple processes simultaneously.
 
-This tutorial will focus on building a simple REST API application with Golang and Mux (A powerful URL router and dispatcher) and deploy this application on Okteto. 
+This tutorial focuses on building a simple RESTAPI application with Golang and Mux (A powerful URL router and dispatcher) on Okteto using the Okteto development container. 
 
 Okteto is a cloud-based platform that gives developers rapid access to secure Kubernetes namespaces and allows them to code, build, and run Kubernetes applications. Okteto also speeds up the Kubernetes application development process.
 
@@ -14,15 +12,7 @@ Your Kubernetes deployment is replaced by a development container that contains 
 
 - A basic understanding of Go syntax
 - Good understanding of PostgreSQL
-
-Firstly, we begin by setting up the package dependencies required for our project; there are a lot of them.  We'll be using these packages to make our work easier.
-
-These packages include:
-
-- Gorilla/Mux: A URL router and dispatcher that matching incoming requests to their respective handler
-- Gorm: A fantastic Golang ORM library that communicates with the database
-- Env vars: to store and load the `.env` file containing our secrets Database information
-- Postman: To test out our API
+- Basic understanding of Docker
 
 ### Setup project
 
@@ -31,6 +21,11 @@ Before we begin setting up our project and installing these packages, ensure you
 ```bash
 mkdir movie_store
 cd movie_store
+```
+
+```bash
+touch main.go
+touch .env
 ```
 
 ### Installations
@@ -50,13 +45,148 @@ go get github.com/joho/godotenv
 go get github.com/jinzhu/gorm/dialects/postgres
 ```
 
-*Now let's get to work!!!* 
-
-Open up your code editor, I would be using Visual studio code.
-
-Create a file, `main.go` .The *main.go* file will handle our models and routes. Firstly, import these packages and add the following lines of code:
+Next, we will be building our Docker image.  Create a `Dockerfile` that provides instructions on building images for deployment on Okteto. In the  `Dockerfile`  add the following:
 
 ```go
+FROM golang:1.16-alpine
+
+WORKDIR /app
+
+COPY go.mod ./
+COPY go.sum ./
+
+RUN go mod download
+
+COPY *.go ./
+
+RUN go build -o /go-moviestore
+
+EXPOSE 8080
+```
+
+ 
+
+Create a `K8s.yml` file that will contain the Kubernetes manifests.
+
+Add the following to your `k8s.yml` manifest:
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+ name: db-creds
+type: Opaque
+data:
+ connection: 
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moviestore
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: moviestore
+  template:
+    metadata:
+      labels:
+        app: moviestore
+    spec:
+      containers:
+      - image: registry.cloud.okteto.net/anitaachu/go-moviestore:golang
+        name: moviestore
+        env:
+        - name: POSTGRES_CONNECTION
+          valueFrom:
+            secretKeyRef:
+              name: db-creds
+              key: connection
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: moviestore
+  annotations:
+    dev.okteto.com/auto-ingress: "true"
+spec:
+  type: ClusterIP  
+  ports:
+  - name: "moviestore"
+    port: 8080
+  selector:
+    app: moviestore
+```
+
+*Now let's get to work!!!* 
+
+### Building application on Okteto
+
+We will be building our application in the Okteto development environment. To do this, first, you have to install [Okteto CLI](https://okteto.com/docs/getting-started/installation/). 
+
+Once Okteto has been successfully installed. Log in to your Okteto Cloud from your CLI:
+
+```go
+okteto login
+```
+
+If this is successful, you'll be asked to open your browser.
+
+Next, download your kubernetes credentials. To this by running this command 
+
+```bash
+okteto namespace
+```
+
+### Setting up Okteto Development container
+
+Firstly, in our terminal let's create an Okteto manifest. To this by running the line of code below:
+
+```bash
+okteto init
+```
+
+ [image}
+
+`okteto init` command checks your Kubernetes namespace for available deployments. From the options, select "*moviestore*".
+
+{image}
+
+`okteto init` command also creates an `okteto.yml` file:
+
+```yaml
+name: moviestore
+image: anitaachu/go-moviestore:golang
+command: bash
+securityContext:
+  capabilities:
+    add:
+    - SYS_PTRACE
+volumes:
+  - /go/pkg/
+  - /root/.cache/go-build/
+sync:
+  - .:/usr/src/app
+forward:
+  - 8080:8080
+  - 2345:2345
+```
+
+Next, let's activate our development container. We will do this by running this line of code:
+
+```bash
+okteto up
+```
+
+{image}
+
+In your `main.go` file which we created earlier add the following: 
+
+```go
+
 package main
 
 import (
@@ -93,7 +223,7 @@ We successfully defined our models.
 
 **Connecting Database**
 
-The first step is connecting data to our database. This will have the information our app needs to access the database. However, saving these data in our code is not secure. Therefore, we will store our database credentials in an `env` file, this way: 
+The first step is connecting data to our database. This will have the information our app needs to access the database. However, saving these data in our code is not secure. Therefore, we will store our database credentials in an `env` file which we created earlier. 
 
 ```go
 DIALECT ="postgres"
@@ -165,9 +295,9 @@ import (
 )
 ```
 
-Gorilla mux would handle our router and incoming requests. Back in our ***main.go*** file, add these lines of code for the routes 
+Gorilla mux would handle our router and incoming requests. Back in our `main.go` ******file, add these lines of code for the routes 
 
-Next, we proceed to creating each route for each function and building the router function
+Next, we proceed to creating each route for each function and building the router function.
 
 ```go
 	// API routes
@@ -290,7 +420,7 @@ func createMovie(w http.ResponseWriter, r *http.Request) {
 }
 ```
 
-In creating a user and movie to the database, we would get ***Json***  input from and outside users using `json.NewDecoder(r.Body).Decode(&user)` to turn to a user and movie struct then we check for errors and pass our response. 
+In creating a user and movie to the database, we would get `JSON` ** input from and outside users using `json.NewDecoder(r.Body).Decode(&user)` to turn to a user and movie struct then we check for errors and pass our response. 
 
 **Deleting a user and movie**
 
@@ -322,65 +452,28 @@ Lastly, the delete functionality. We begin by getting an `id` of the user or mov
 
 `db.First` gets specific user or movie then deletes the user or movie from the database.
 
+  
+
+***Hey! we are done building.***
+
+Let us get our server up and running. In your terminal run,  `go run main.go`
+
+ ***Our API is live!***
+
 **Testing out on postman**
 
-Firstly, let us get our server up and running. In your terminal run, `go run main.go` After that, you can proceed to use Postman to test our endpoints.
+Our server is up. we will proceed to Postman to test our endpoint which was provided by Okteto.
 
-***Hey! we are done building. Ladies and gentlemen let's deploy!*** 
+[image]
 
-### Deploying application on Okteto
-
-We will be deploying our API on Okteto Cloud. By deploying this application it becomes accessible to end-users.
-
-To begin, create an account on [Okteto](https://okteto.com/). Next, install the Okteto CLI. 
-
-Briefly, let's build our Docker image.  Create a `Dockerfile` that provides instructions on building images for deployment on Okteto. In the  `Dockerfile`  add the following:
-
-```go
-FROM golang:1.16-alpine
-
-WORKDIR /app
-
-COPY go.mod ./
-COPY go.sum ./
-
-RUN go mod download
-
-COPY *.go ./
-
-RUN go build -o /go-moviestore
-
-EXPOSE 8080
-```
-
-Now, let's get our API up and running on Okteto. Run the following command to setup namespace on Okteto cloud.
-
-```go
-okteto namespace
-```
-
-Next step, run the following command:
-
-```go
-okteto stack deploy --build
-```
-
-This line of code builds and deploys the services in Okteto cloud. With the command above starts our application.
-
-**Our API is now available!!!**
-
-### Testing endpoints
-
-A link has been provided on our Okteto dashboard. Now, let's test the endpoints.
+[image]
 
 ### Conclusion
 
-In this tutorial, we built a CRUD API in Golang and deployed it on Okteto. 
-
 Developers can code, build, and run Kubernetes applications entirely in the cloud thanks to Okteto Cloud's rapid access to secure Kubernetes namespaces.
 
-You can also deploy your application to a production-like development environment on an external Kubernetes cluster.
+In this tutorial, we built a CRUD API in Golang directly on Okteto using the Okteto development environment. We also deployed the application to Okteto. You can also deploy your application to a production-like development environment on an external Kubernetes cluster.
 
-I hope you have fun building and deploying on Okteto. 
+I hope you have good time building and deploying on Okteto with ease. 
 
 Happy coding!
