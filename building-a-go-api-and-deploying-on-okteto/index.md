@@ -149,11 +149,11 @@ Firstly, in our terminal let's create an Okteto manifest. To this by running the
 okteto init
 ```
 
- [image}
+![Okteto init command](/blog-proposals/building-a-go-api-and-deploying-on-okteto/init.png)
 
 `okteto init` command checks your Kubernetes namespace for available deployments. From the options, select "*moviestore*".
 
-{image}
+![Okteto yaml](/blog-proposals/building-a-go-api-and-deploying-on-okteto/oktetoup.png)
 
 `okteto init` command also creates an `okteto.yml` file:
 
@@ -181,7 +181,7 @@ Next, let's activate our development container. We will do this by running this 
 okteto up
 ```
 
-{image}
+![Okteto development](/blog-proposals/building-a-go-api-and-deploying-on-okteto/terminal.png)
 
 In your `main.go` file which we created earlier add the following: 
 
@@ -456,7 +456,10 @@ Lastly, the delete functionality. We begin by getting an `id` of the user or mov
 
 ***Hey! we are done building.***
 
-Let us get our server up and running. In your terminal run,  `go run main.go`
+
+Copy the endpoint on your Okteto dashboard.
+![Okteto dashboard](/blog-proposals/building-a-go-api-and-deploying-on-okteto/namespace.png)
+
 
  ***Our API is live!***
 
@@ -464,9 +467,9 @@ Let us get our server up and running. In your terminal run,  `go run main.go`
 
 Our server is up. we will proceed to Postman to test our endpoint which was provided by Okteto.
 
-[image]
+![Create movie](/blog-proposals/building-a-go-api-and-deploying-on-okteto/createmovie.png)
 
-[image]
+![Get movies](/blog-proposals/building-a-go-api-and-deploying-on-okteto/movies.png)
 
 ### Conclusion
 
